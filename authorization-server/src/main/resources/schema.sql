@@ -19,6 +19,6 @@ CREATE TABLE IF NOT EXISTS nb_users_roles (
     user_id integer NOT NULL,
     role_id integer NOT NULL,
     PRIMARY KEY (user_id, role_id),
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES nb_users (user_id),
-    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES nb_roles (role_id)
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES nb_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES nb_roles (role_id) ON UPDATE CASCADE
     );
