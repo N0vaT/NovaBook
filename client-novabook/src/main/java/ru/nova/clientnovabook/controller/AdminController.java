@@ -15,10 +15,10 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
-//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class AdminController {
 
     @GetMapping
+    @PreAuthorize("#authentication.authorities.contains('ROLE_ADMIN')")
     public String getAdminPage(Model model, Principal principal, Authentication authentication){
         System.out.println(authentication.getDetails().toString());
         System.out.println(authentication.getAuthorities().toString());

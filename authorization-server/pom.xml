@@ -16,8 +16,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <!--        <maven.compiler.source>17</maven.compiler.source>-->
-        <!--        <maven.compiler.target>17</maven.compiler.target>-->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <spring-auth-server.version>0.3.1</spring-auth-server.version>
         <spring.cloud-version>2021.0.5</spring.cloud-version>
     </properties>
