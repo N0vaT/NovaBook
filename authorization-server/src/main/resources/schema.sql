@@ -10,8 +10,10 @@ CREATE TABLE IF NOT EXISTS nb_roles(
 
 CREATE TABLE IF NOT EXISTS nb_users(
     user_id serial,
-    user_name varchar(20) UNIQUE not null,
-    user_password varchar(100) not null,
+    first_name varchar(20),
+    last_name varchar(20),
+    email varchar(20) UNIQUE not null,
+    password varchar(100) not null,
     PRIMARY KEY (user_id)
     );
 

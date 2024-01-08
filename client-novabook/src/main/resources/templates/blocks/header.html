@@ -12,13 +12,18 @@
                 </ul>
 
                 <div sec:authorize="isAnonymous()">
-                    <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" id="btnLogModal" data-bs-target="#modalLogin">
+                    <a class="btn btn-outline-light me-2" id="logIn" th:href="@{/oauth2/authorization/nb-client-oidc}">
                         Войти
-                    </button>
+                    </a>
                     <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" id="btnLogModal" data-bs-target="#modalLogin">
                         Регистрация
                     </button>
                 </div>
+                <form sec:authorize="isAuthenticated()"  th:action="@{/logout}" method="post">
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button class="btn btn-outline-dark">Выйти</button>
+                    </div>
+                </form>
 
 <!--                <div th:insert="blocks/login"></div>-->
 <!--                <div th:insert="blocks/register"></div>-->

@@ -3,7 +3,6 @@ package ru.nova.authorizationserver.security;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.nova.authorizationserver.model.User;
 
 import java.util.Collection;
@@ -16,7 +15,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     @Override
