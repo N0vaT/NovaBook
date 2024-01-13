@@ -29,11 +29,11 @@ spring:
         # tag::provider_config[]
         provider:
           spring:
-            issuer-uri: http://127.0.0.1:9000
-            authorization-uri: http://localhost:9000/oauth2/authorize
-
-            token-uri: http://localhost:9000/oauth2/token
-            jwk-set-uri: http://localhost:9000/oauth2/jwks
-            user-info-uri: http://localhost:9000/userinfo
+            issuer-uri: http://localhost:9000
+#            authorization-uri: http://localhost:9000/oauth2/authorize
+#
+#            token-uri: http://localhost:9000/oauth2/token
+#            jwk-set-uri: http://localhost:9000/oauth2/jwks
+#            user-info-uri: http://localhost:9000/userinfo
 #            user-name-attribute: sub
 # end::provider_config[]

@@ -15,9 +15,6 @@
                     <a class="btn btn-outline-light me-2" id="logIn" th:href="@{/oauth2/authorization/nb-client-oidc}">
                         Войти
                     </a>
-                    <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" id="btnLogModal" data-bs-target="#modalLogin">
-                        Регистрация
-                    </button>
                 </div>
                 <form sec:authorize="isAuthenticated()"  th:action="@{/logout}" method="post">
                     <div class="d-grid gap-2 col-6 mx-auto">

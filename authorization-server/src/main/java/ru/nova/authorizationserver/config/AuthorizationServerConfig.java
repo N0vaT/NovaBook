@@ -7,12 +7,9 @@ import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +18,6 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -38,13 +34,11 @@ import ru.nova.authorizationserver.config.properties.AuthorizationServerProperti
 import ru.nova.authorizationserver.config.utils.JwkUtils;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration()
 @RequiredArgsConstructor
 public class AuthorizationServerConfig {
     private final AuthorizationServerProperties authorizationServerProperties;
@@ -90,8 +84,7 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("http://127.0.0.1:8081/login/oauth2/code/nb-client-oidc")
-//                .redirectUri("http://127.0.0.1:8081/authprized")
-//                .scope(OidcScopes.PROFILE)
+                .postLogoutRedirectUri("http://127.0.0.1:8081/logged-out")
                 .scope(OidcScopes.OPENID)
                 .tokenSettings(tokenSettings())
                 .clientSettings(clientSettings())
@@ -123,13 +116,6 @@ public class AuthorizationServerConfig {
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
-
-//    @Bean
-//    public ProviderSettings providerSettings(){
-//        return  ProviderSettings.builder()
-//                .issuer(authorizationServerProperties.getIssuerUrl())
-//                .build();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
