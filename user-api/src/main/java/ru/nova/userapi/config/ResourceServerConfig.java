@@ -20,6 +20,7 @@ public class ResourceServerConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        .mvcMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
 //                .oauth2ResourceServer((oauth2) -> oauth2.jwt().jwkSetUri("http://127.0.0.1:9000/oauth2/jwks"));
