@@ -5,14 +5,16 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import ru.nova.clientnovabook.config.WelcomeClient;
+import org.springframework.stereotype.Service;
+import ru.nova.clientnovabook.config.UserWebClient;
 import ru.nova.clientnovabook.model.User;
 
 import java.io.IOException;
+@Service
 @RequiredArgsConstructor
 public class RestUserService implements UserService{
 //    private RestTemplate restTemplate;
-    private WelcomeClient welcomeClient;
+    private UserWebClient userWebClient;
 
     public RestUserService(String accessToken) {
 //        this.restTemplate = new RestTemplate();

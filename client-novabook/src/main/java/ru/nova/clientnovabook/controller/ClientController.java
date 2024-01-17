@@ -13,8 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.nova.clientnovabook.config.WelcomeClient;
+import ru.nova.clientnovabook.config.UserWebClient;
 import ru.nova.clientnovabook.model.User;
+import ru.nova.clientnovabook.service.UserService;
 
 import java.security.Principal;
 
@@ -23,8 +24,8 @@ import java.security.Principal;
 @AllArgsConstructor
 public class ClientController {
 
-//    private final UserService userService;
-    private final WelcomeClient welcomeClient;
+    private final UserService userService;
+//    private final UserWebClient userWebClient;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
     @GetMapping()
@@ -36,9 +37,9 @@ public class ClientController {
 
 //        User user = userService.findUserByName("LOL");
 //        System.out.println(user.toString());
-        User user = welcomeClient.getWelcome();
-        System.out.println(user);
         if(principal!=null) {
+            User user = userService.getUserByEmail(principal.getName());
+            System.out.println(user);
             String name = principal.getName();
             model.addAttribute("user", name);
         }
