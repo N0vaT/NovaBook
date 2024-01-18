@@ -1,6 +1,7 @@
 package ru.nova.authorizationserver.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.nova.authorizationserver.model.Role;
@@ -28,5 +29,12 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public long getUserIdByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with username - " + email + " not found"))
+                .getUserId();
     }
 }
