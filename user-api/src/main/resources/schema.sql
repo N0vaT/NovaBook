@@ -11,6 +11,5 @@ CREATE TABLE IF NOT EXISTS nb_clients(
     registration_date timestamp NOT NULL,
     avatar_name varchar(100),
     sex varchar(10),
-    auth_id integer,
     PRIMARY KEY (user_id)
-)
+);

@@ -1,0 +1,30 @@
+<div th:fragment="userInfo(user)">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+    <!--        <img th:src="@{/avatar/{name}(name=${user.avatarName})}" class="rounded mx-auto d-block" alt="...">-->
+            <img th:src="@{/images/default.png}" class="rounded mx-auto d-block">
+            </div>
+            <div class="row px-2">
+                <div th:text="${user.firstName}">firstName</div>
+            </div>
+            <div class="row px-2">
+                <div th:text="${user.lastName}">lastName</div>
+            </div>
+
+            <div class="row px-2">
+                <div th:text="${user.patronymic}">patronymic</div>
+            </div>
+            <div class="row px-2">
+                <div th:text="${user.birthday}">birthday</div>
+            </div>
+            <div class="row px-2">
+                <div th:text="${user.registrationDate}">registrationDate</div>
+            </div>
+            <div class="row px-2">
+                <div th:text="${user.sex}">sex</div>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>

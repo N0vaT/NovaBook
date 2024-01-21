@@ -1,6 +1,9 @@
 package ru.nova.clientnovabook.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -13,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.reactive.function.client.WebClientException;
 import ru.nova.clientnovabook.config.UserWebClient;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.service.UserService;
@@ -22,6 +26,7 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/client")
 @AllArgsConstructor
+@Log4j2
 public class ClientController {
 
     private final UserService userService;
@@ -30,20 +35,17 @@ public class ClientController {
 
     @GetMapping()
 //    @GetMapping("/{smth}")
-//    @PreAuthorize("#something == authentication.name")
+//    @PreAuthorize("#authentication.authenticated == true")
 //    public String getClientPage(@PathVariable("smth") String something, Model model, Principal principal){
-    public String getClientPage(Model model, Principal principal, Authentication authentication){
-//        userService.findUserByAuthorityId(authentication.)
-        System.out.println(authentication.getAuthorities().toString());
-//        User user = userService.findUserByName("LOL");
-//        System.out.println(user.toString());
-        if(principal!=null) {
-            User user = userService.findUserById(1L);
-            System.out.println(user);
-            String name = principal.getName();
-            model.addAttribute("user", name);
+    public String getClientPage(Model model, Principal principal){
+        User user;
+        try{
+            user = userService.findUserByEmail(principal.getName());
+        }catch (WebClientException e){
+            log.info("Create new client, email - {}", principal.getName());
+            user = userService.createNewUser();
         }
-
+        model.addAttribute("user", user);
         return "clientPage";
     }
 

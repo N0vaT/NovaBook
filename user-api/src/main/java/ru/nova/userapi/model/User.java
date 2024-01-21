@@ -37,9 +37,6 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "sex")
     private Sex sex;
-    @Column(name = "auth_id")
-    private Long authId;
-
 
     public enum Sex{
         WOMAN, MEAN

@@ -2,8 +2,11 @@ package ru.nova.clientnovabook.config;
 
 import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
 import ru.nova.clientnovabook.model.User;
 
 import java.util.List;
@@ -15,7 +18,9 @@ public interface UserWebClient {
     List<User> getUsers();
     @GetExchange("/{id}")
     User getUserById(@PathVariable long id);
-    @GetExchange("/auth/{id}")
-    User findUserByAuthorityId(long userAuthorityId);
+    @GetExchange()
+    User getUserByEmail(@RequestParam("email") String email);
+    @PostExchange()
+    User createNewUser(@RequestBody() User user);
 
 }

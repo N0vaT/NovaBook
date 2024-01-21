@@ -21,8 +21,9 @@ public class AdminController {
     private final UserService userService;
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String getAdminPage(Model model, Principal principal, Authentication authentication){
+    public String getAdminPage(Model model){
         List<User> users = userService.findUsers();
+        model.addAttribute("users", users);
         System.out.printf(userService.findUsers().toString());
         return "adminPage";
     }

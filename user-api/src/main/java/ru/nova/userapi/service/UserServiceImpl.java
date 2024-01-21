@@ -12,14 +12,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
-
     private final UserRepository userRepository;
-
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
     @Override
     public User findByEmail(String userEmail) {
         return userRepository.findByEmail(userEmail).orElseThrow(() ->
@@ -29,5 +26,11 @@ public class UserServiceImpl implements UserService{
     public User findById(long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("User with id - " + userId + " not found"));
+    }
+
+    @Override
+    @Transactional
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }
