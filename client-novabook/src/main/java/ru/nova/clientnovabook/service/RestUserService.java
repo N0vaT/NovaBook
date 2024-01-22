@@ -54,6 +54,12 @@ public class RestUserService implements UserService{
                 .build();
         return userWebClient.createNewUser(user);
     }
+
+    @Override
+    public User save(User user) {
+        return userWebClient.editUser(user);
+    }
+
     //    @Override
 //    public User findUserByName(String username) {
 //        System.out.println("Im this");

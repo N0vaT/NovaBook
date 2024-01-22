@@ -22,8 +22,9 @@
         <td colspan="2"> Nu Users Available </td>
     </tr>
     <tr th:each="user : ${users}">
-        <td><span th:text="${user.userId}"> Id </span></td>
+        <td><span th:text="${user.id}"> Id </span></td>
         <td><span th:text="${user.email}"> Email </span></td>
+        <td><a th:href="'/client/' + ${user.id}" th:text="${user.name}"></a></td>
     </tr>
     </tbody>
 </table>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>NovaBook</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet"  th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<header th:insert="~{blocks/header}"></header>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editNameModal">Изменить ФИО</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPhoneModal">Изменить Телефон</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editBirthdayModal">Изменить Дату рождения</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editSexModal">Изменить Пол</button>
+
+<div class="modal fade" id="editNameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/name}" id="nameForm" th:object="${userName}">
+                    <div class="mb-3">
+                        <label for="edit-firstName" class="col-form-label">Имя:</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" id="edit-firstName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-lastName" class="col-form-label">Фамилия:</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" id="edit-lastName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-patronymic" class="col-form-label">Отчество:</label>
+                        <input type="text" class="form-control" th:field="*{patronymic}" id="edit-patronymic">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="nameForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editPhoneModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/phone}" id="phoneForm" th:object="${userPhone}">
+                    <div class="mb-3">
+                        <label for="edit-phone" class="col-form-label">Телефон:</label>
+                        <input type="text" class="form-control" th:field="*{phone}" id="edit-phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="phoneForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editBirthdayModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/birthday}" id="birthdayForm" th:object="${userBirthday}">
+                    <div class="mb-3">
+                        <label for="edit-birthday" class="col-form-label">Дата рождения:</label>
+                        <input type="date" class="form-control" th:field="*{birthday}" id="edit-birthday">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="birthdayForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editSexModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/birthday}" id="sexForm" th:object="${userBirthday}">
+                    <div class="mb-3">
+                        <label for="edit-sex" class="col-form-label">Пол:</label>
+                        <input type="date" class="form-control" th:field="*{sex}" id="edit-sex">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="sexForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:insert="~{blocks/footer}"></footer>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

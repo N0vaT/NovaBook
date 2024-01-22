@@ -14,10 +14,12 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClientException;
 import ru.nova.clientnovabook.config.UserWebClient;
+import ru.nova.clientnovabook.model.Mapper;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.service.UserService;
 
@@ -30,6 +32,7 @@ import java.security.Principal;
 public class ClientController {
 
     private final UserService userService;
+    private final Mapper mapper;
 //    private final UserWebClient userWebClient;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
@@ -45,10 +48,15 @@ public class ClientController {
             log.info("Create new client, email - {}", principal.getName());
             user = userService.createNewUser();
         }
-        model.addAttribute("user", user);
+        model.addAttribute("user", mapper.toDto(user));
         return "clientPage";
     }
 
+    @GetMapping("/{id}")
+    public String getClientIdPage(@PathVariable("id") long id, Model model){
+        model.addAttribute("user", mapper.toDto(userService.findUserById(id)));
+        return "clientPage";
+    }
     @GetMapping("/token")
     @ResponseBody
     public String token(Authentication authentication) {

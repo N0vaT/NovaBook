@@ -51,4 +51,10 @@ public class UserController {
         return userService.save(user);
     }
 
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public User editUser(@RequestBody User user){
+        return userService.save(user);
+    }
+
 }
