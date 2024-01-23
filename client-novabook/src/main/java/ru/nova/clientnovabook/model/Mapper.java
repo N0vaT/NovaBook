@@ -15,10 +15,11 @@ public class Mapper {
                 .birthday(user.getBirthday())
                 .registrationDate(user.getRegistrationDate())
                 .avatarName(getAvatarName(user))
+                .sex(user.getSex())
                 .build();
     }
 
-    private String getFullName(User user){
+    public String getFullName(User user){
         StringBuffer name = new StringBuffer();
         if(user.getLastName() != null){
             name.append(user.getLastName());
@@ -41,11 +42,11 @@ public class Mapper {
         return name.toString();
     }
 
-    private String getAvatarName(User user){
+    public String getAvatarName(User user){
         if(user.getAvatarName() != null){
             return user.getAvatarName();
         }
-        if(user.getSex() == null){
+        if(user.getSex() == null || user.getSex().equals(User.Sex.NONE)){
             return "default.png";
         }else if(user.getSex().equals(User.Sex.MAN)){
             return "default_m.jpeg";

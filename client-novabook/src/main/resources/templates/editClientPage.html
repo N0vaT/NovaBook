@@ -12,6 +12,7 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPhoneModal">Изменить Телефон</button>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editBirthdayModal">Изменить Дату рождения</button>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editSexModal">Изменить Пол</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAvatarModal">Изменить Фото</button>
 
 <div class="modal fade" id="editNameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -79,11 +80,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <form th:method="put" th:action="@{/client/edit/birthday}" id="sexForm" th:object="${userBirthday}">
-                    <div class="mb-3">
-                        <label for="edit-sex" class="col-form-label">Пол:</label>
-                        <input type="date" class="form-control" th:field="*{sex}" id="edit-sex">
-                    </div>
+                <form th:method="put" th:action="@{/client/edit/sex}" id="sexForm" th:object="${userSex}">
+                    <select class="form-select" th:field="*{sex}" size="6" aria-label="size 3 select example" form="sexForm">
+                        <option th:each="sex:${listSex}" th:value="${sex}" th:text="${sex.name()}"></option>
+                    </select>
                 </form>
             </div>
             <div class="modal-footer">
@@ -93,6 +93,36 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editAvatarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img th:src="@{'/avatars/' + ${userAvatar.avatarName}}" class="rounded mx-auto d-block" width="200" height="250">
+                <a class="btn btn-success mx-auto d-block" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    Загрузить новый постер
+                </a>
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Загрузите новое изображение</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+                    </div>
+
+                    <form th:method="put" enctype="multipart/form-data" th:action="@{/client/edit/avatar}" id="posterLoud">
+                        <input class="form-control" type="file" name="file">
+                        <br/>
+                        <button type="submit" class="btn btn-primary mb-3" form="posterLoud">Загрузить</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="sexForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <footer th:insert="~{blocks/footer}"></footer>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>

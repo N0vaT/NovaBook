@@ -39,7 +39,7 @@ public class User {
     private Sex sex;
 
     public enum Sex{
-        WOMAN, MAN
+        NONE, WOMAN, MAN
     }
 
 }
