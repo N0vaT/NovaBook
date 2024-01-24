@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.nova.clientnovabook.exception.FileNotImageException;
 import ru.nova.clientnovabook.model.Mapper;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.model.dto.*;
 import ru.nova.clientnovabook.service.FileUploadService;
 import ru.nova.clientnovabook.service.UserService;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import java.security.Principal;
 import java.time.format.DateTimeFormatter;
 
@@ -130,6 +133,8 @@ public class ClientEditController {
             fileUploadService.saveAvatar(file, user);
             userService.save(user);
             redirectAttributes.addFlashAttribute("message", "Аватар профиля успешно изменен");
+        }catch (FileNotImageException e){
+            redirectAttributes.addFlashAttribute("message", "Файл не является изображением, попробуйте загрузить другой файл");
         }catch (WebClientException e){
             e.printStackTrace();
             throw new RuntimeException(); //TODO
