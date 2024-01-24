@@ -6,8 +6,8 @@
     <link rel="stylesheet"  th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
+<div th:if="${message} != null" th:insert="~{blocks/message :: message(${message})}"></div>
 <header th:insert="~{blocks/header}"></header>
-
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editNameModal">Изменить ФИО</button>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPhoneModal">Изменить Телефон</button>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editBirthdayModal">Изменить Дату рождения</button>
@@ -93,37 +93,6 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="editAvatarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <img th:src="@{'/avatars/' + ${userAvatar.avatarName}}" class="rounded mx-auto d-block" width="200" height="250">
-                <a class="btn btn-success mx-auto d-block" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-                    Загрузить новый постер
-                </a>
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Загрузите новое изображение</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
-                    </div>
-
-                    <form th:method="put" enctype="multipart/form-data" th:action="@{/client/edit/avatar}" id="posterLoud">
-                        <input class="form-control" type="file" name="file">
-                        <br/>
-                        <button type="submit" class="btn btn-primary mb-3" form="posterLoud">Загрузить</button>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" form="sexForm">Изменить</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <footer th:insert="~{blocks/footer}"></footer>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
