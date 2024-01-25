@@ -33,7 +33,6 @@ public class ClientController {
 
     private final UserService userService;
     private final Mapper mapper;
-//    private final UserWebClient userWebClient;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
     @GetMapping()
@@ -45,8 +44,7 @@ public class ClientController {
         try{
             user = userService.findUserByEmail(principal.getName());
         }catch (WebClientException e){
-            log.info("Create new client, email - {}", principal.getName());
-            user = userService.createNewUser();
+            user = userService.createNewUser(); //TODO
         }
         model.addAttribute("user", mapper.toDto(user));
         return "clientPage";

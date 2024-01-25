@@ -12,12 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegistrationDto {
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Поле не может быть пустым")
+    @Email(message = "Некорректный email")
     private String email;
-    @NotBlank
-//    @Pattern(regexp = "/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g")
+    @Pattern(regexp = "/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g", message = """
+            Пароль должен содержать: хотя бы одно число,
+            один спецсимвол, латинскую букву в нижнем регистре,
+            латинскую букву в верхнем регистре и состоять не менее, чем из 6 символов.
+            """)
     private String password;
-    @NotBlank
+    @NotBlank(message = "Поле не может быть пустым")
     private String repeatPassword;
 }
