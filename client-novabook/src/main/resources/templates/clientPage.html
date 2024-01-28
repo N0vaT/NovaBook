@@ -20,6 +20,12 @@
         </div>
         <div class="col-9 border">
             Колонка
+            <form th:method="post"  th:action="@{/client/post}" th:object="${postDto}" >
+                <div class="input-group mb-1 border">
+                    <input type="text" class="form-control" placeholder="Жанр" th:value="*{postText}">
+                    <button class="btn btn-outline-danger" type="submit">Добавить</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

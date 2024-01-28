@@ -14,14 +14,15 @@ import java.util.List;
 
 @RestController()
 @RequestMapping("/users")
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     @GetMapping
     public ResponseEntity<?> getUsers(
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false) String email){
+            @RequestParam(required = false) String email
+    ){
         if(email == null){
             return ResponseEntity.ok(userService.findAll());
         }
@@ -34,8 +35,9 @@ public class UserController {
         }
         return response;
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable long id){
+    public ResponseEntity<User> getUserById(@PathVariable Long id){
         ResponseEntity<User> response;
         try{
             User user = userService.findById(id);
@@ -45,6 +47,7 @@ public class UserController {
         }
         return response;
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public User saveUser(@RequestBody User user){
