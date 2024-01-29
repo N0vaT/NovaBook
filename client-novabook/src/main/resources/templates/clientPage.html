@@ -20,12 +20,18 @@
         </div>
         <div class="col-9 border">
             Колонка
-            <form th:method="post"  th:action="@{/client/post}" th:object="${postDto}" >
-                <div class="input-group mb-1 border">
-                    <input type="text" class="form-control" placeholder="Жанр" th:value="*{postText}">
-                    <button class="btn btn-outline-danger" type="submit">Добавить</button>
+            <form th:method="post"  th:action="@{/client/post}" id="postForm" th:object="${postDto}">
+                <div class="mb-3">
+                    <input th:type="text" class="form-control" placeholder="Жанр" th:field="*{postText}">
+                    <button type="submit" class="btn btn-primary" form="postForm">Добавить</button>
                 </div>
             </form>
+            <div th:each="onePost:${posts}">
+                <div class="row px-2 border">
+                    <h5 th:text="${#temporals.format(onePost.dateCreation, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></h5>
+                        <small class="text-muted" th:text="${onePost.postText}"></small>
+                </div>
+            </div>
         </div>
     </div>
 </div>

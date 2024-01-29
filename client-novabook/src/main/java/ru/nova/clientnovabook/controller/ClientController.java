@@ -1,9 +1,7 @@
 package ru.nova.clientnovabook.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -15,8 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientException;
-import ru.nova.clientnovabook.config.UserWebClient;
-import ru.nova.clientnovabook.config.WallWebClient;
+import ru.nova.clientnovabook.service.WallService;
+import ru.nova.clientnovabook.webClient.WallWebClient;
 import ru.nova.clientnovabook.model.Mapper;
 import ru.nova.clientnovabook.model.Post;
 import ru.nova.clientnovabook.model.User;
@@ -33,7 +31,7 @@ import java.time.LocalDateTime;
 public class ClientController {
 
     private final UserService userService;
-    private final WallWebClient wallWebClient;
+    private final WallService wallService;
     private final Mapper mapper;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
@@ -48,8 +46,8 @@ public class ClientController {
         }catch (WebClientException e){
             user = userService.createNewUser(); //TODO
         }
-        model.addAttribute("posts", wallWebClient.getPostsByOwnerId(user.getUserId()));
-        model.addAttribute("postDto", new PostDto());
+        model.addAttribute("posts", wallService.findPostsByOwnerId(user.getUserId()));
+        model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("user", mapper.toDto(user));
         return "clientPage";
     }
@@ -57,6 +55,8 @@ public class ClientController {
     @GetMapping("/{id}")
     public String getClientIdPage(@PathVariable("id") long id, Model model){
         model.addAttribute("user", mapper.toDto(userService.findUserById(id)));
+        model.addAttribute("posts", wallService.findPostsByOwnerId(id));
+        model.addAttribute("postDto", PostDto.builder().build());
         return "clientPage";
     }
     @PostMapping("/post")
@@ -67,14 +67,9 @@ public class ClientController {
         }catch (WebClientException e){
             user = userService.createNewUser(); //TODO
         }
-        Post post = new Post();
-        post.setPostText(postDto.getPostText());
-        post.setDateCreation(LocalDateTime.now());
-        post.setOwnerId(user.getUserId());
-        post.setStatus(Post.Status.ACTIVE);
-        System.out.println(post.toString());
-        wallWebClient.createPost(post);
-        return "clientPage";
+        postDto.setOwnerId(user.getUserId());
+        wallService.createPost(postDto);
+        return "redirect:/client";
     }
 
 

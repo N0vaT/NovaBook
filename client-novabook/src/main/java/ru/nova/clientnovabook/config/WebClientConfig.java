@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
+import ru.nova.clientnovabook.webClient.UserWebClient;
+import ru.nova.clientnovabook.webClient.WallWebClient;
 
 @Configuration
 public class WebClientConfig {
