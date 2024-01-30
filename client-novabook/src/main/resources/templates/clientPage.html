@@ -6,7 +6,6 @@
     <link rel="stylesheet"  th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
-<h1 th:text="${user} + '; '">HELLO Client @{user}</h1>
 <header th:insert="~{blocks/header}"></header>
 
 <a th:href="@{/client/token}">Tokens</a>
@@ -19,19 +18,7 @@
             <div th:insert="~{blocks/user_block :: userInfo(${user})}"></div>
         </div>
         <div class="col-9 border">
-            Колонка
-            <form th:method="post"  th:action="@{/client/post}" id="postForm" th:object="${postDto}">
-                <div class="mb-3">
-                    <input th:type="text" class="form-control" placeholder="Жанр" th:field="*{postText}">
-                    <button type="submit" class="btn btn-primary" form="postForm">Добавить</button>
-                </div>
-            </form>
-            <div th:each="onePost:${posts}">
-                <div class="row px-2 border">
-                    <h5 th:text="${#temporals.format(onePost.dateCreation, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></h5>
-                        <small class="text-muted" th:text="${onePost.postText}"></small>
-                </div>
-            </div>
+            <div th:insert="~{blocks/wall_block :: wall}"></div>
         </div>
     </div>
 </div>

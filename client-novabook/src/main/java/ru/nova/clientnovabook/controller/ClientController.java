@@ -49,6 +49,7 @@ public class ClientController {
         model.addAttribute("posts", wallService.findPostsByOwnerId(user.getUserId()));
         model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("user", mapper.toDto(user));
+        model.addAttribute("visitStatus", "owner");
         return "clientPage";
     }
 
@@ -57,24 +58,9 @@ public class ClientController {
         model.addAttribute("user", mapper.toDto(userService.findUserById(id)));
         model.addAttribute("posts", wallService.findPostsByOwnerId(id));
         model.addAttribute("postDto", PostDto.builder().build());
+        model.addAttribute("visitStatus", "guest");
         return "clientPage";
     }
-    @PostMapping("/post")
-    public String addPost(PostDto postDto, Principal principal){
-        User user;
-        try{
-            user = userService.findUserByEmail(principal.getName());
-        }catch (WebClientException e){
-            user = userService.createNewUser(); //TODO
-        }
-        postDto.setOwnerId(user.getUserId());
-        wallService.createPost(postDto);
-        return "redirect:/client";
-    }
-
-
-
-
 
     @GetMapping("/token")
     @ResponseBody

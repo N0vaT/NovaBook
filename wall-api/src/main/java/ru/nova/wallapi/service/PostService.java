@@ -5,9 +5,9 @@ import ru.nova.wallapi.model.Post;
 import java.util.List;
 
 public interface PostService {
-    List<Post> findAll();
-    List<Post> findByOwnerId(Long ownerId);
+    List<Post> findAll(int pageNumber, int pageSize, String direction, String sortByField);
+    List<Post> findByOwnerId(Long ownerId, int pageNumber, int pageSize, String direction, String sortByField);
     Post findById(Long postId);
     Post save(Post post);
-    void deleteById(Long postId);
+    boolean deleteById(Long postId);
 }

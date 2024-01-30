@@ -4,13 +4,20 @@
         <div class="col-8 border d-grid mx-auto">
     <!--        <img th:src="@{/avatar/{name}(name=${user.avatarName})}" class="rounded mx-auto d-block" alt="...">-->
             <img th:src="@{'/avatars/' + ${user.avatarName}}" class="rounded mx-auto d-block img-fluid">
-            <a th:href="@{/client/edit}" class="btn btn-primary"
+            <a th:if="${visitStatus.equals('owner')}" th:href="@{/client/edit}" class="btn btn-primary"
                     style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
                 Редактировать
             </a>
         </div>
         <div class="col-2 border"></div>
     </div>
+    <div class="row px-4 gap-1 border">
+<!--        <div class="d-grid gap-2 border">-->
+                <button th:if="${visitStatus.equals('guest')}" class="btn btn-primary btn-sm" type="button">Добавить в друзья</button>
+                <button th:if="${!visitStatus.equals('owner')}" class="btn btn-primary btn-sm" type="button">Написать</button>
+<!--        </div>-->
+    </div>
+
             <div class="row px-2 border">
                 <h2 th:text="${user.name}">Name</h2>
             </div>

@@ -11,4 +11,5 @@ public interface WallService {
     List<Post> findPostsByOwnerId(long ownerId);
     Post createPost(PostDto postDto);
     Post editPost(Post post);
+    void deletePost(long postId);
 }
