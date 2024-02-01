@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS nb_posts_comments;
 DROP TABLE IF EXISTS nb_comments;
 DROP TABLE IF EXISTS nb_posts;
 
@@ -7,7 +6,9 @@ CREATE TABLE IF NOT EXISTS nb_comments(
     text text NOT NULL,
     date_creation timestamp NOT NULL,
     owner_id integer NOT NULL,
-    PRIMARY KEY (comment_id)
+    post_id integer NOT NULL,
+    PRIMARY KEY (comment_id),
+    CONSTRAINT fk_nb_posts_post_id FOREIGN KEY (post_id) REFERENCES nb_posts (post_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS nb_posts(
@@ -18,12 +19,4 @@ CREATE TABLE IF NOT EXISTS nb_posts(
     owner_id integer NOT NULL,
     status varchar(10) NOT NULL,
     PRIMARY KEY (post_id)
-);
-
-CREATE TABLE IF NOT EXISTS nb_posts_comments(
-    post_id integer NOT NULL,
-    comment_id integer NOT NULL,
-    PRIMARY KEY (post_id, comment_id),
-    CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES nb_posts (post_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES nb_comments (comment_id) ON UPDATE CASCADE
 );

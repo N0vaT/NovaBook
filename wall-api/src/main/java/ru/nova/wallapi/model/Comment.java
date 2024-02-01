@@ -26,4 +26,6 @@ public class Comment {
     private LocalDateTime dateCreation;
     @Column(name = "owner_id")
     private Long ownerId;
+    @Column(name = "post_id")
+    private Long postId;
 }

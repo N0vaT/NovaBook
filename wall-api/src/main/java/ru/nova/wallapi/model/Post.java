@@ -32,11 +32,7 @@ public class Post {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "nb_posts_comments",
-            joinColumns = {@JoinColumn(name = "post_id")},
-            inverseJoinColumns = @JoinColumn(name = "comment_id")
-    )
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "postId")
     private List<Comment> comments;
 
     public enum Status{

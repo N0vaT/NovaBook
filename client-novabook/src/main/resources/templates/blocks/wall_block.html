@@ -6,23 +6,44 @@
             <button type="submit" class="btn btn-primary" form="postForm">Добавить</button>
         </div>
     </form>
-    <div class="border" th:each="onePost:${posts}">
+    <div class="border" th:each="onePost:${wall.posts}">
         <div class="row px-2 border">
             <div class="col-2 border">
                 <small class="text-muted" th:text="${#temporals.format(onePost.dateCreation, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></small>
             </div>
+            <div th:if="${visitStatus.equals('owner')}" class="col-10 d-grid gap-2 d-md-flex justify-content-md-end border">
+                <button type="submit" class="btn btn-outline-success" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Изменить</button>
+                <form id="deletePostForm" th:method="delete" th:action="@{/client/post/{id} (id=${onePost.postId})}">
+                    <button type="submit" form="deletePostForm" class="btn btn-outline-danger" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Удалить</button>
+                </form>
+            </div>
         </div>
         <div class="row px-2 border">
-            <h5 class="text-muted" th:text="${onePost.postTitle}"></h5>
+            <h5 class="text-center" th:text="${onePost.postTitle}"></h5>
         </div>
         <div class="row px-2 border">
             <h6 class="text-muted" th:text="${onePost.postText}"></h6>
         </div>
-        <div th:if="${visitStatus.equals('owner')}" class="d-grid gap-2 d-md-flex justify-content-md-end border">
-            <button type="submit" class="btn btn-outline-success">Изменить</button>
-            <form id="deletePostForm" th:method="delete" th:action="@{/client/post/{id} (id=${onePost.postId})}">
-                <button type="submit" form="deletePostForm" class="btn btn-outline-danger">Удалить</button>
-            </form>
+        <div class="row px-2 border">
+            <nav class="navbar-sm">
+                <div class="container-fluid">
+                    <form th:method="post"  th:action="@{'/client/post/' + ${onePost.postId} + '/comment'}" id="'commentForm' + ${onePost.postId}" th:object="${commentDto}">
+<!--                        <img th:src="@{'/avatars/' + ${user.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">-->
+                        <input class="form-control me-2" th:field="*{text}" type="search" placeholder="Комментарий" aria-label="Комментарйи">
+<!--                        <button class="btn btn-sm btn-outline-secondary" type="button">Меньшая кнопка</button>-->
+                        <button class="btn btn-outline-success" type="submit" form="'commentForm' + ${onePost.postId}">Комментарий</button>
+                    </form>
+                </div>
+            </nav>
+            <div class="container-fluid" th:each="comment:${onePost.comments}">
+<!--                  <form th:method="post"  th:action="@{'/client/post/' + ${onePost.postId} + '/comment'}" id="commentForm" th:object="${commentDto}">-->
+                <!--                        <img th:src="@{'/avatars/' + ${user.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">-->
+                <small class="text-muted" th:text="${comment.text}"></small>
+                <!--                        <button class="btn btn-sm btn-outline-secondary" type="button">Меньшая кнопка</button>-->
+<!--                      <button class="btn btn-outline-success" type="submit" form="commentForm">Комментарий</button>-->
+<!--                  </form>-->
+            </div>
         </div>
     </div>
+    <div th:insert="blocks/pagination_chapters"></div>
 </div>

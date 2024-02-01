@@ -1,20 +1,19 @@
 package ru.nova.clientnovabook.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.nova.clientnovabook.model.Comment;
 import ru.nova.clientnovabook.model.Post;
-import ru.nova.clientnovabook.model.User;
+import ru.nova.clientnovabook.model.dto.AddCommentDto;
 import ru.nova.clientnovabook.model.dto.PostDto;
 import ru.nova.clientnovabook.webClient.WallWebClient;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RestWallService implements WallService {
+public class RestPostService implements PostService {
     private final WallWebClient wallWebClient;
 
     @Override
@@ -26,8 +25,12 @@ public class RestWallService implements WallService {
         return wallWebClient.getPostById(postId);
     }
     @Override
-    public List<Post> findPostsByOwnerId(long ownerId) {
-        return wallWebClient.getPostsByOwnerId(ownerId);
+    public List<Post> findPostsByOwnerId(long ownerId, int pageNumber, int pageSize, String direction, String sortByField) {
+        return wallWebClient.getPostsByOwnerId(ownerId, pageNumber, pageSize, direction, sortByField);
+    }
+    @Override
+    public Integer getCountPostsByOwnerId(long ownerId) {
+        return wallWebClient.getCountPostsByOwnerId(ownerId);
     }
     @Override
     public Post createPost(PostDto postDto) {
@@ -43,9 +46,17 @@ public class RestWallService implements WallService {
     public Post editPost(Post post) {
         return wallWebClient.editPost(post);
     }
-
     @Override
     public void deletePost(long postId) {
         wallWebClient.deletePost(postId);
+    }
+    @Override
+    public Comment addComment(AddCommentDto addCommentDto){
+        Comment comment = new Comment();
+        comment.setOwnerId(addCommentDto.getOwnerId());
+        comment.setPostId(addCommentDto.getPostId());
+        comment.setText(addCommentDto.getText());
+        comment.setDateCreation(LocalDateTime.now());
+        return wallWebClient.addComment(comment.getPostId(), comment);
     }
 }

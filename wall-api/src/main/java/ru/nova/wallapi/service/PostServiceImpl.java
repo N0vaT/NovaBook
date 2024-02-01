@@ -32,6 +32,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public Integer getCountPostsByOwnerId(Long ownerId){
+        return postRepository.countPostByOwnerId(ownerId);
+    }
+
+    @Override
     public Post findById(Long postId) {
         return postRepository.findById(postId).orElseThrow(() ->
                 new PostNotFoundException("Post with id - " + postId + " not found")

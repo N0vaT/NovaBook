@@ -28,7 +28,6 @@ public class RestUserService implements UserService{
     }
     @Override
     public User createNewUser() {
-        System.out.println(SecurityContextHolder.getContext().toString());
         Principal principal = SecurityContextHolder.getContext().getAuthentication();
         User user = User.builder()
                 .email(principal.getName())
