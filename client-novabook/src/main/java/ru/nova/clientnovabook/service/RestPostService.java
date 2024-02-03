@@ -3,6 +3,7 @@ package ru.nova.clientnovabook.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.nova.clientnovabook.model.Comment;
+import ru.nova.clientnovabook.model.CountPostByOwner;
 import ru.nova.clientnovabook.model.Post;
 import ru.nova.clientnovabook.model.dto.AddCommentDto;
 import ru.nova.clientnovabook.model.dto.PostDto;
@@ -29,7 +30,7 @@ public class RestPostService implements PostService {
         return wallWebClient.getPostsByOwnerId(ownerId, pageNumber, pageSize, direction, sortByField);
     }
     @Override
-    public Integer getCountPostsByOwnerId(long ownerId) {
+    public CountPostByOwner getCountPostsByOwnerId(long ownerId) {
         return wallWebClient.getCountPostsByOwnerId(ownerId);
     }
     @Override

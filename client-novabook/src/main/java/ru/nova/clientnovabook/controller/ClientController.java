@@ -70,6 +70,7 @@ public class ClientController {
         model.addAttribute("user", mapper.toDto(userService.findUserById(id)));
         model.addAttribute("wall", wallService.getWallByOwnerId(id, pageNumber, pageSize, direction, sortByField));
         model.addAttribute("postDto", PostDto.builder().build());
+        model.addAttribute("commentDto", new AddCommentDto());
         model.addAttribute("visitStatus", "guest");
         return "clientPage";
     }
