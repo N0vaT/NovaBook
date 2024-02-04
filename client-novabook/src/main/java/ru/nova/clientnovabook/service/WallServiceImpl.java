@@ -30,6 +30,6 @@ public class WallServiceImpl implements WallService{
     public void addUserInfoInComment(Comment comment){
         User user = userService.findUserById(comment.getOwnerId());
         comment.setName(mapper.getFullName(user));
-        comment.setAvatarName(user.getAvatarName());
+        comment.setAvatarName(mapper.getAvatarName(user));
     }
 }

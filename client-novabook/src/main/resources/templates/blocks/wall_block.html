@@ -3,43 +3,83 @@
         <div class="mb-3 border">
             <input th:type="text" class="form-control" placeholder="Заголовок" th:field="*{postTitle}">
             <input th:type="text" class="form-control" placeholder="Текст" th:field="*{postText}">
-            <button type="submit" class="btn btn-primary" form="postForm">Добавить</button>
         </div>
+<!--        <div class="d-grid gap-2 col-6 mx-auto">-->
+            <button type="submit" class="btn btn-link" form="postForm">Оставить пост</button>
+<!--        </div>-->
     </form>
     <div class="border" th:each="onePost, postStat : *{posts}">
         <div class="row px-2 border">
             <div class="col-2 border">
                 <small class="text-muted" th:text="${#temporals.format(onePost.dateCreation, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></small>
             </div>
-            <div th:if="${visitStatus.equals('owner')}" class="col-10 d-grid gap-2 d-md-flex justify-content-md-end border">
-                <button type="submit" class="btn btn-outline-success" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Изменить</button>
+            <div class="col-4 border">
+                <h5 class="text-center" th:text="${onePost.postTitle}"></h5>
+            </div>
+            <div th:if="${visitStatus.equals('owner')}" class="col-6 d-grid gap-2 d-md-flex justify-content-md-end border">
+                <!-- Кнопка-триггер модального окна -->
+                <button type="submit" class="btn btn-outline-success" data-bs-toggle="modal" th:data-bs-target="'#exampleModal' + ${onePost.postId}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Изменить</button>
                 <form id="deletePostForm" th:method="delete" th:action="@{/client/post/{id} (id=${onePost.postId})}">
                     <button type="submit" form="deletePostForm" class="btn btn-outline-danger" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Удалить</button>
                 </form>
+                <!-- Модальное окно -->
+                <div class="modal fade" th:id="'exampleModal' + ${onePost.postId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Изменить пост</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <button type="button" class="btn btn-primary">Изменить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row px-2 border">
-            <h5 class="text-center" th:text="${onePost.postTitle}"></h5>
         </div>
         <div class="row px-2 border">
             <h6 class="text-muted" th:text="${onePost.postText}"></h6>
         </div>
         <div class="row px-2 border">
-            <nav class="navbar-sm">
-                <div class="container-fluid">
-                    <form th:method="post"  th:action="@{/client/post/{id}/comment (id=*{posts[__${postStat.index}__].postId})}">
-<!--                        <img th:src="@{'/avatars/' + ${user.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">-->
+            <div class="row border">
+                <form th:method="post"  th:action="@{/client/post/{id}/comment (id=*{posts[__${postStat.index}__].postId})}">
+                    <!--                        <img th:src="@{'/avatars/' + ${user.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">-->
+                    <div class="col-10 border">
                         <input class="form-control me-2" th:field="${commentDto.text}" type="search" placeholder="Комментарйи" aria-label="Комментарйи">
-                        <button class="btn btn-outline-success" type="submit">Комментарий</button>
-                    </form>
+                    </div>
+                    <div class="col-2 border">
+                        <button class="btn btn-outline-primary" type="submit" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Комментарий</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row border" th:each="comment : ${onePost.comments}">
+                <div class="col-1 border"></div>
+                <div class="col-10 border">
+                    <div class="row border">
+                        <div class="col-1 border">
+                            <img th:src="@{'/avatars/' + ${comment.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">
+                        </div>
+                        <div class="col-6 border">
+                            <a th:href="@{/client/{id} (id=${comment.ownerId})}" th:text="${comment.name}"></a>
+                        </div>
+                        <div class="col-5 border">
+                            <small class="text-muted" th:text="${#temporals.format(comment.dateCreation, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></small>
+                        </div>
+                    </div>
+                    <div class="row px-1 border">
+                        <small class="text-muted" th:text="${comment.text}"></small>
+                    </div>
+                    <hr class="border border-primary border-1 opacity-75">
                 </div>
-            </nav>
-            <div class="container-fluid" th:each="comment : ${onePost.comments}">
-                <img th:src="@{'/avatars/' + ${comment.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">
-                <a class="text-muted" th:href="@{/client/{id} (id=${comment.ownerId})}" th:text="${comment.name}"></a>
-                <small class="text-muted" th:text="${comment.text}"></small>
+                <div class="col-3 border"></div>
             </div>
         </div>
+        <hr class="border border-primary border-2 opacity-75">
     </div>
     <div th:insert="blocks/pagination_chapters"></div>
 </div>
