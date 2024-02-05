@@ -17,4 +17,5 @@ public interface PostService {
     Post editPost(Post post);
     void deletePost(long postId);
     Comment addComment(AddCommentDto addCommentDto);
+    void deleteComment(long postId, long commentId);
 }

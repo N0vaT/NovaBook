@@ -33,4 +33,7 @@ public interface WallWebClient {
     @PostExchange("/{postId}/comment")
     Comment addComment(@PathVariable long postId,
                        @RequestBody Comment comment);
+    @DeleteExchange("/{postId}/comment/{commentId}")
+    void deleteComment(@PathVariable long postId,
+            @PathVariable long commentId);
 }

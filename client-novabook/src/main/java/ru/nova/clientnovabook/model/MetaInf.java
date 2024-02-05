@@ -1,15 +1,16 @@
-package ru.nova.clientnovabook.model.dto;
+package ru.nova.clientnovabook.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EditPostDto {
-    private String title;
-    private String text;
+@Data
+public class MetaInf {
+    private Long id;
+    private String avatarName;
+    private String name;
 }

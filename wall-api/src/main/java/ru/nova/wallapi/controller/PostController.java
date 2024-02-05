@@ -74,7 +74,13 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public Comment addComment(@PathVariable long postId,
                        @RequestBody Comment comment){
-        commentService.save(comment);
-        return null;
+
+        return commentService.save(comment);
+    }
+    @DeleteMapping("/{postId}/comment/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void  deleteComment(@PathVariable long postId,
+                               @PathVariable long commentId){
+        commentService.deleteById(commentId);
     }
 }

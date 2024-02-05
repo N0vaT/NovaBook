@@ -3,15 +3,20 @@ package ru.nova.clientnovabook.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientException;
+import ru.nova.clientnovabook.exception.PostNotFoundException;
+import ru.nova.clientnovabook.model.Post;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.model.dto.AddCommentDto;
 import ru.nova.clientnovabook.model.dto.PostDto;
+import ru.nova.clientnovabook.model.dto.WallDto;
 import ru.nova.clientnovabook.service.UserService;
 import ru.nova.clientnovabook.service.PostService;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/client/post")
@@ -37,8 +42,16 @@ public class PostController {
         return "redirect:/client";
     }
     @PutMapping("/{id}")
-    public String changePost(@PathVariable("id") long postId){
-
+    public String changePost(@PathVariable("id") long postId, String title, String text){
+        if(text.equals("")){
+            return "redirect:/client";
+        }
+        Post post = postService.findPostById(postId);
+        if(!title.equals(post.getPostTitle()) || !text.equals(post.getPostText())){
+            post.setPostTitle(title);
+            post.setPostText(text);
+            postService.editPost(post);
+        }
         return "redirect:/client";
     }
 
@@ -49,7 +62,7 @@ public class PostController {
 //            user = userService.findUserByEmail(principal.getName());
 ////            if()
 //        }catch (WebClientException e){
-//            throw new RuntimeException(); // TODO
+//            throw new RuntimeException(); // TODO Сделать защиту на удаление
 //        }
         postService.deletePost(postId);
         return "redirect:/client";
@@ -71,6 +84,21 @@ public class PostController {
         addCommentDto.setPostId(postId);
         addCommentDto.setOwnerId(user.getUserId());
         postService.addComment(addCommentDto);
+        return "redirect:/client";
+    }
+    @DeleteMapping("/{postId}/comment/{commentId}")
+    public String deleteComment(@PathVariable("postId") long postId,
+                                @PathVariable("commentId") long commentId,
+                                Principal principal)
+    {
+        //        User user;
+//        try{
+//            user = userService.findUserByEmail(principal.getName());
+////            if()
+//        }catch (WebClientException e){
+//            throw new RuntimeException(); // TODO Сделать защиту на удаление
+//        }
+        postService.deleteComment(postId, commentId);
         return "redirect:/client";
     }
 }
