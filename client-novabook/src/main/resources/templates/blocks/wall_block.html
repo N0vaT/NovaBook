@@ -74,16 +74,51 @@
                         <div class="col-1 border">
                             <img th:src="@{'/avatars/' + ${comment.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">
                         </div>
-                        <div class="col-4 border">
+                        <div class="col-3 border">
                             <small class="text-muted" th:text="${#temporals.format(comment.dateCreation, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></small>
                         </div>
                         <div class="col-5 border">
                             <a th:href="@{/client/{id} (id=${comment.ownerId})}" th:text="${comment.name}"></a>
                         </div>
-                        <div class="col-2 border">
+                        <div class="col-3 d-grid gap-2 d-md-flex justify-content-md-end border">
+                            <!-- Кнопка-триггер модального окна изменения комментария-->
+                            <button th:if="${comment.ownerId} == ${metaInf.id}" type="submit" class="btn btn-link" data-bs-toggle="modal" th:data-bs-target="'#changeComment' + ${comment.commentId}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Изменить</button>
+                            <!-- Модальное окно изменения комментария-->
+                            <div class="modal fade" th:id="'changeComment' + ${comment.commentId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" >Изменить комментарий</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <!-- Форма изменения поста -->
+                                                <form th:if="${comment.ownerId} == ${metaInf.id}"
+                                                      th:method="put"
+                                                      th:action="${visitStatus.equals('owner')} ?
+                                                      @{'/client/post/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].postId} + '/comment/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].commentId}} :
+                                                      @{'/client/' + *{posts[__${postStat.index}__].ownerId} + '/post/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].postId} + '/comment/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].commentId}}">
+                                                    <input class="form-control me-2" th:name="title" th:value="*{posts[__${postStat.index}__].postTitle}" type="text" placeholder="Заголовок"/>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <!-- Кнопка закрытия модального окно изменения поста -->
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                            <!-- Кнопка формы изменения комментария -->
+                                            <button type="submit" class="btn btn-primary" th:form="'changePostForm' + ${onePost.postId}">Изменить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Форма удаления комментария-->
-                            <form th:method="delete" th:action="${visitStatus.equals('owner')} ? @{'/client/post/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].postId} + '/comment/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].commentId}} : @{'/client/' + *{posts[__${postStat.index}__].ownerId} + '/post/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].postId} + '/comment/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].commentId}}">
-                                <button type="submit" class="btn btn-link-danger">Удалить</button>
+                            <form th:if="*{posts[__${postStat.index}__].ownerId} == ${metaInf.id} or ${comment.ownerId} == ${metaInf.id}"
+                                  th:method="delete"
+                                  th:action="${visitStatus.equals('owner')} ?
+                                  @{'/client/post/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].postId} + '/comment/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].commentId}} :
+                                  @{'/client/' + *{posts[__${postStat.index}__].ownerId} + '/post/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].postId} + '/comment/' + *{posts[__${postStat.index}__].comments[__${commentStat.index}__].commentId}}">
+                                <button type="submit" class="btn btn-link" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Удалить</button>
                             </form>
                         </div>
                     </div>
