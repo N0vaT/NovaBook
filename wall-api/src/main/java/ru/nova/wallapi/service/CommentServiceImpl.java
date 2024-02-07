@@ -29,6 +29,14 @@ public class CommentServiceImpl implements CommentService {
     public Comment save(Comment comment){
         return commentRepository.save(comment);
     }
+
+    @Override
+    @Transactional
+    public Comment update(long commentId, Comment comment) {
+        comment.setCommentId(commentId);
+        return commentRepository.save(comment);
+    }
+
     @Override
     @Transactional
     public void deleteById(Long commentId){

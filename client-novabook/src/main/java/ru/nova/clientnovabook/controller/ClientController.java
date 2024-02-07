@@ -112,6 +112,27 @@ public class ClientController {
         return "redirect:/client/" + userId;
     }
 
+    @PutMapping("/{userId}/post/{postId}/comment/{commentId}")
+    public String editComment(@PathVariable("userId") long userId,
+                                @PathVariable("postId") long postId,
+                                @PathVariable("commentId") long commentId,
+                                String commentText,
+                                Principal principal)
+    {
+        if(commentText == null || commentText.equals("")){
+            return "redirect:/client/" + userId;
+        }
+        //        User user;
+//        try{
+//            user = userService.findUserByEmail(principal.getName());
+////            if()
+//        }catch (WebClientException e){
+//            throw new RuntimeException(); // TODO Сделать защиту на удаление
+//        }
+        postService.editComment(commentId, commentText);
+        return "redirect:/client/" + userId;
+    }
+
     @DeleteMapping("/{userId}/post/{postId}/comment/{commentId}")
     public String deleteComment(@PathVariable("userId") long userId,
                                 @PathVariable("postId") long postId,
@@ -125,7 +146,7 @@ public class ClientController {
 //        }catch (WebClientException e){
 //            throw new RuntimeException(); // TODO Сделать защиту на удаление
 //        }
-        postService.deleteComment(postId, commentId);
+        postService.deleteComment(commentId);
         return "redirect:/client/" + userId;
     }
 

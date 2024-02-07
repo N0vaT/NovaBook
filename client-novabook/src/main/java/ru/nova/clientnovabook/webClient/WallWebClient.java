@@ -1,5 +1,6 @@
 package ru.nova.clientnovabook.webClient;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +34,11 @@ public interface WallWebClient {
     @PostExchange("/{postId}/comment")
     Comment addComment(@PathVariable long postId,
                        @RequestBody Comment comment);
-    @DeleteExchange("/{postId}/comment/{commentId}")
-    void deleteComment(@PathVariable long postId,
-            @PathVariable long commentId);
+    @GetExchange("/comment/{commentId}")
+    Comment getCommentById(@PathVariable long commentId);
+    @DeleteExchange("/comment/{commentId}")
+    void deleteComment(@PathVariable long commentId);
+    @PutExchange("/comment/{commentId}")
+    Comment editComment(@PathVariable long commentId,
+                        @RequestBody Comment comment);
 }
