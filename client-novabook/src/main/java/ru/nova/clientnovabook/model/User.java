@@ -24,6 +24,7 @@ public class User {
     private LocalDateTime registrationDate;
     private String avatarName;
     private Sex sex;
+    private Set<User> friends;
     public enum Sex{
         NONE(), WOMAN, MAN;
     }

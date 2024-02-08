@@ -72,7 +72,7 @@
             </nav>
             <!-- Кнопка-триггер выпадающих комментариев -->
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-link" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseComments' + ${onePost.postId}" th:text="'Посмотреть комментарии(' + *{posts[__${postStat.index}__].comments.size()} + ')'" aria-expanded="false" aria-controls="collapseExample">
+                <button th:if="*{posts[__${postStat.index}__].comments.size()} != 0" class="btn btn-link" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseComments' + ${onePost.postId}" th:text="'Посмотреть комментарии(' + *{posts[__${postStat.index}__].comments.size()} + ')'" aria-expanded="false" aria-controls="collapseExample">
                     Посмотреть комментарии
                 </button>
             </div>
