@@ -2,7 +2,6 @@ package ru.nova.clientnovabook.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.nova.clientnovabook.model.Comment;
 import ru.nova.clientnovabook.model.CountPostByOwner;
 import ru.nova.clientnovabook.model.Post;
@@ -11,12 +10,11 @@ import ru.nova.clientnovabook.model.dto.PostDto;
 import ru.nova.clientnovabook.webClient.WallWebClient;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RestPostService implements PostService {
+public class PostServiceRest implements PostService {
     private final WallWebClient wallWebClient;
 
     @Override

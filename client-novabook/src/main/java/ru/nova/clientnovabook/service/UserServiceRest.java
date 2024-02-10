@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RestUserService implements UserService{
+public class UserServiceRest implements UserService{
     private final UserWebClient userWebClient;
     @Override
     public List<User> findUsers() {
@@ -38,6 +38,6 @@ public class RestUserService implements UserService{
 
     @Override
     public User save(User user) {
-        return userWebClient.editUser(user);
+        return userWebClient.editUser(user.getUserId(), user);
     }
 }

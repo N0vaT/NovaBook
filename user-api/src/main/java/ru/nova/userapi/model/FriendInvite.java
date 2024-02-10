@@ -1,5 +1,9 @@
 package ru.nova.userapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +25,11 @@ public class FriendInvite {
     private Long inviteId;
     @ManyToOne()
     @JoinColumn(name = "user_from")
+    @JsonIgnore
     private User userFrom;
     @ManyToOne()
     @JoinColumn(name = "user_to")
+    @JsonIgnore
     private User userTo;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

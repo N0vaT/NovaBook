@@ -9,5 +9,5 @@ public interface UserService {
     User findById(long userId);
     User findByEmail(String userEmail);
     User save(User user);
-
+    User changeUser(long id, User user);
 }

@@ -19,13 +19,13 @@ spring:
       hibernate:
         dialect:  org.hibernate.dialect.PostgreSQLDialect
         show_sql: true
-  security:
-    oauth2:
-      resourceserver:
-        opaque:
-          issuer-uri: http://127.0.0.1:9000/oauth2/introspect
-          client: nb-client
-          secret: secret
+#  security:
+#    oauth2:
+#      resourceserver:
+#        opaque:
+#          issuer-uri: http://127.0.0.1:9000/oauth2/introspect
+#          client: nb-client
+#          secret: secret
 #        jwt:
 #          issuer-uri: http://127.0.0.1:9000
 #  Для отмены создания пользователя по умолчанию

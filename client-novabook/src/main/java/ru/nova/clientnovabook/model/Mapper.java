@@ -16,6 +16,9 @@ public class Mapper {
                 .registrationDate(user.getRegistrationDate())
                 .avatarName(getAvatarName(user))
                 .sex(user.getSex())
+                .friends(user.getFriends())
+                .requestFriendInvites(user.getRequestFriendInvites())
+                .responseFriendInvites(user.getResponseFriendInvites())
                 .build();
     }
 

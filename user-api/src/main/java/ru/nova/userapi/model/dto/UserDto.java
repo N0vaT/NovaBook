@@ -1,20 +1,23 @@
-package ru.nova.clientnovabook.model;
+package ru.nova.userapi.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.nova.userapi.model.FriendInvite;
+import ru.nova.userapi.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-@Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@Builder
+@Data
+public class UserDto {
     private Long userId;
     private String firstName;
     private String lastName;
@@ -24,12 +27,8 @@ public class User {
     private LocalDate birthday;
     private LocalDateTime registrationDate;
     private String avatarName;
-    private Sex sex;
-    private List<Friend> friends;
-    private List<FriendInvite> requestFriendInvites;
-    private List<FriendInvite> responseFriendInvites;
-    public enum Sex{
-        NONE(), WOMAN, MAN;
-    }
-
+    private User.Sex sex;
+    private List<FriendDto> friends;
+    private List<FriendInviteDto> requestFriendInvites;
+    private List<FriendInviteDto> responseFriendInvites;
 }

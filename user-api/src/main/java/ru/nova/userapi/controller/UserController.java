@@ -1,11 +1,15 @@
 package ru.nova.userapi.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nova.userapi.exception.UserNotFoundException;
 import ru.nova.userapi.model.User;
+import ru.nova.userapi.model.dto.FriendDto;
+import ru.nova.userapi.model.dto.FriendInviteDto;
+import ru.nova.userapi.model.dto.UserDto;
 import ru.nova.userapi.service.UserService;
 
 import javax.websocket.server.PathParam;
@@ -18,6 +22,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final ModelMapper modelMapper;
     @GetMapping
     public ResponseEntity<?> getUsers(
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
@@ -27,10 +32,10 @@ public class UserController {
         if(email == null){
             return ResponseEntity.ok(userService.findAll());
         }
-        ResponseEntity<User> response;
+        ResponseEntity<UserDto> response;
         try {
             User user = userService.findByEmail(email);
-            response = new ResponseEntity<>(user, HttpStatus.OK);
+            response = new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
         }catch (UserNotFoundException e){
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -38,11 +43,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
-        ResponseEntity<User> response;
+    public ResponseEntity<UserDto> getUserById(@PathVariable long id){
+        ResponseEntity<UserDto> response;
         try{
             User user = userService.findById(id);
-            response = new ResponseEntity<>(user, HttpStatus.OK);
+            response = new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
         }catch (UserNotFoundException e){
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -50,11 +55,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public ResponseEntity<Set<User>> getUserFriends(@PathVariable Long id){
-        ResponseEntity<Set<User>> response;
+    public ResponseEntity<List<FriendDto>> getUserFriends(@PathVariable long id){
+        ResponseEntity<List<FriendDto>> response;
         try{
             User user = userService.findById(id);
-            response = new ResponseEntity<>(user.getFriends(), HttpStatus.OK);
+            response = new ResponseEntity<>(user.getFriends().stream()
+                    .map(u -> modelMapper.map(u, FriendDto.class))
+                    .toList(), HttpStatus.OK);
         }catch (UserNotFoundException e){
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -64,13 +71,16 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public User saveUser(@RequestBody User user){
+        System.out.println("");
         return userService.save(user);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public User editUser(@RequestBody User user){
-        return userService.save(user);
+    public User editUser(@PathVariable long id,
+                         @RequestBody User user){
+        System.out.println("");
+        return userService.changeUser(id, user);
     }
 
 }
