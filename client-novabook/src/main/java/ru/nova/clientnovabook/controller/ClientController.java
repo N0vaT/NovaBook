@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClientException;
 import ru.nova.clientnovabook.model.MetaInf;
 import ru.nova.clientnovabook.model.dto.AddCommentDto;
 import ru.nova.clientnovabook.service.PostService;
-import ru.nova.clientnovabook.model.Mapper;
+import ru.nova.clientnovabook.model.mapper.UserMapper;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.model.dto.PostDto;
 import ru.nova.clientnovabook.service.UserService;
@@ -33,7 +33,7 @@ public class ClientController {
     private final UserService userService;
     private final WallService wallService;
     private final PostService postService;
-    private final Mapper mapper;
+    private final UserMapper userMapper;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
     @ModelAttribute
@@ -45,9 +45,9 @@ public class ClientController {
             user = userService.createNewUser(); //TODO
         }
         model.addAttribute("metaInf", MetaInf.builder()
-                        .avatarName(mapper.getAvatarName(user))
+                        .avatarName(userMapper.getAvatarName(user.getAvatarName(), user.getSex()))
                         .id(user.getUserId())
-                        .name(mapper.getFullName(user))
+                        .name(userMapper.getFullName(user.getFirstName(), user.getLastName(), user.getPatronymic()))
                 .build());
     }
 
@@ -70,7 +70,7 @@ public class ClientController {
         }
         model.addAttribute("wall", wallService.getWallByOwnerId(user.getUserId(), pageNumber, pageSize, direction, sortByField));
         model.addAttribute("postDto", PostDto.builder().build());
-        model.addAttribute("user", mapper.toDto(user));
+        model.addAttribute("user", userMapper.toDto(user));
         model.addAttribute("commentDto", new AddCommentDto());
         model.addAttribute("visitStatus", "owner");
         return "clientPage";
@@ -84,7 +84,7 @@ public class ClientController {
                                   @RequestParam(required = false, defaultValue = "dateCreation") String sortByField,
                                   Model model
     ){
-        model.addAttribute("user", mapper.toDto(userService.findUserById(id)));
+        model.addAttribute("user", userMapper.toDto(userService.findUserById(id)));
         model.addAttribute("wall", wallService.getWallByOwnerId(id, pageNumber, pageSize, direction, sortByField));
         model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("commentDto", new AddCommentDto());

@@ -5,18 +5,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.nova.clientnovabook.model.FriendInvite;
-import ru.nova.clientnovabook.model.User;
 
 import java.time.LocalDateTime;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
 public class FriendInviteDto {
     private Long inviteId;
     private Long userFrom;
+    private String nameFrom;
+    private String avatarFrom;
     private Long userTo;
+    private String nameTo;
+    private String avatarTo;
     private FriendInvite.InviteStatus status;
     private LocalDateTime dateTime;
 }

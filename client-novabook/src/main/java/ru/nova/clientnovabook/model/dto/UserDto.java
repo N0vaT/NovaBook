@@ -10,6 +10,7 @@ import ru.nova.clientnovabook.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -25,7 +26,7 @@ public class UserDto {
     private LocalDateTime registrationDate;
     private String avatarName;
     private User.Sex sex;
-    private List<Friend> friends;
-    private List<FriendInvite> requestFriendInvites;
-    private List<FriendInvite> responseFriendInvites;
+    private List<FriendDto> friends = new ArrayList<>();
+    private List<FriendInviteDto> requestFriendInvites = new ArrayList<>();
+    private List<FriendInviteDto> responseFriendInvites = new ArrayList<>();
 }

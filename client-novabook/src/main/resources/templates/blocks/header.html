@@ -7,7 +7,6 @@
                     <li><a th:href="@{/}" class="nav-link px-2 text-white">Главная</a></li>
                     <li><a th:href="@{/client}" class="nav-link px-2 text-white">Моя страница</a></li>
                     <li><a th:href="@{/search}" class="nav-link px-2 text-white">Люди</a></li>
-<!--                    <li><a th:href="@{/}" class="nav-link px-2 text-white">Дневник</a></li>-->
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin}" class="nav-link px-2 text-white">Панель администратора</a></li>
                 </ul>
 
@@ -16,14 +15,13 @@
                         Войти
                     </a>
                 </div>
-                <form sec:authorize="isAuthenticated()"  th:action="@{/logout}" method="post">
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-outline-light me-2">Выйти</button>
-                    </div>
-                </form>
-
-<!--                <div th:insert="blocks/login"></div>-->
-<!--                <div th:insert="blocks/register"></div>-->
+                <div sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button class="btn btn-outline-light me-2">Выйти</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </header>
