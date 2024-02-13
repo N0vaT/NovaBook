@@ -3,6 +3,7 @@ package ru.nova.clientnovabook.model.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import ru.nova.clientnovabook.model.FriendInvite;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.model.dto.UserDto;
 
@@ -31,6 +32,7 @@ public class UserMapper {
                         .map(friendInviteMapper::toDto)
                         .toList())
                 .responseFriendInvites(user.getResponseFriendInvites().stream()
+                        .filter(r -> !r.getStatus().equals(FriendInvite.InviteStatus.DENIED))
                         .map(friendInviteMapper::toDto)
                         .toList())
                 .build();

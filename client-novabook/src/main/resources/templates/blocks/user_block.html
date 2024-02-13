@@ -1,6 +1,6 @@
 <div th:fragment="userInfo(user)">
     <!-- Блок входящих заявок в друзья -->
-    <div class="dropdown">
+    <div class="dropdown" th:if="${visitStatus.equals('owner')}">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Заяыки в друзья
         </button>
@@ -24,7 +24,7 @@
         </ul>
     </div>
     <!-- Блок исходящих заявок в друзья -->
-    <div class="dropdown">
+    <div class="dropdown" th:if="${visitStatus.equals('owner')}">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Исходящие запросы в друзья
         </button>
@@ -47,7 +47,6 @@
     <div class="row border">
         <div class="col-2 border"></div>
         <div class="col-8 border d-grid mx-auto">
-    <!--        <img th:src="@{/avatar/{name}(name=${user.avatarName})}" class="rounded mx-auto d-block" alt="...">-->
             <img th:src="@{'/avatars/' + ${user.avatarName}}" class="rounded mx-auto d-block img-fluid">
             <a th:if="${visitStatus.equals('owner')}" th:href="@{/client/edit}" class="btn btn-primary"
                     style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
@@ -59,7 +58,14 @@
     <div class="row px-4 gap-1 border">
         <!-- Форма добавления в друзья -->
         <form class="container-fluid" th:method="post"  th:action="@{'/client/' + ${user.id} + '/friend'}">
-            <button th:if="${visitStatus.equals('guest')}" class="btn btn-primary btn-sm" type="submit">Добавить в друзья</button>
+            <button th:if="${visitStatus.equals('guest') and !friendStatus.equals('FRIEND')}"
+                    th:classappend="${friendStatus.equals('WAITING') ? 'disabled' : ''}" class="btn btn-primary btn-sm" type="submit">
+                Добавить в друзья
+            </button>
+        </form>
+        <!-- Форма удаления из друзей -->
+        <form class="container-fluid" th:method="delete"  th:action="@{'/client/' + ${user.id} + '/friend'}">
+            <button th:if="${visitStatus.equals('guest') and friendStatus.equals('FRIEND')}" class="btn btn-primary btn-sm" type="submit">Удалить из друзей</button>
         </form>
         <button th:if="${!visitStatus.equals('owner')}" class="btn btn-primary btn-sm" type="submit">Написать</button>
     </div>

@@ -10,6 +10,7 @@ import ru.nova.userapi.repository.FriendInviteRepository;
 import ru.nova.userapi.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,13 +41,41 @@ public class JpaFriendInviteService implements FriendInviteService{
     public FriendInvite save(FriendInviteDto inviteDto) {
         User userFrom = userService.findById(inviteDto.getUserFrom());
         User userTo = userService.findById(inviteDto.getUserTo());
-        if(userTo.getRequestFriendInvites().stream().anyMatch(r -> r.getUserTo().equals(userFrom))){
+        if(inviteDto.getStatus().equals(FriendInvite.InviteStatus.WAITING) &&
+                userTo.getRequestFriendInvites().stream().
+                anyMatch(r -> r.getUserTo().equals(userFrom) && r.getStatus().equals(FriendInvite.InviteStatus.WAITING))
+        ){
             inviteDto.setStatus(FriendInvite.InviteStatus.ACCEPTED);
-            userTo.getRequestFriendInvites().stream().filter(r -> r.getUserTo().equals(userFrom)).findAny().get().setStatus(FriendInvite.InviteStatus.ACCEPTED);
+            userTo.getRequestFriendInvites().stream()
+                    .filter(r -> r.getUserTo().equals(userFrom))
+                    .findAny()
+                    .get().setStatus(FriendInvite.InviteStatus.ACCEPTED);
+            userTo.getRequestFriendInvites().stream()
+                    .filter(r -> r.getUserTo().equals(userFrom))
+                    .findAny()
+                    .get().setDateTime(LocalDateTime.now());
             userFrom.getFriends().add(userTo);
             userTo.getFriends().add(userFrom);
             userRepository.save(userTo);
             userRepository.save(userFrom);
+        }
+        if(inviteDto.getStatus().equals(FriendInvite.InviteStatus.DENIED)
+                && userFrom.getFriends().stream().anyMatch(u -> u.equals(userTo))
+        ){
+            FriendInvite inviteDeniedTo = userTo.getRequestFriendInvites().stream()
+                    .filter(r -> r.getUserTo().equals(userFrom))
+                    .findAny()
+                    .get();
+            inviteDeniedTo.setStatus(FriendInvite.InviteStatus.WAITING);
+            inviteDeniedTo.setDateTime(LocalDateTime.now());
+            userFrom.getFriends().remove(userTo);
+            userTo.getFriends().remove(userFrom);
+            userRepository.save(userTo);
+            userRepository.save(userFrom);
+            friendInviteRepository.save(inviteDeniedTo);
+            long id = userFrom.getRequestFriendInvites().stream()
+                    .filter(r -> r.getUserTo().equals(userTo)).findAny().get().getInviteId();
+            inviteDto.setInviteId(id);
         }
         FriendInvite invite = FriendInvite.builder()
                 .inviteId(inviteDto.getInviteId())

@@ -23,7 +23,6 @@ public class AdminController {
     public String getAdminPage(Model model){
         List<User> users = userService.findUsers();
         model.addAttribute("users", users.stream().map(userMapper::toDto).toList());
-        System.out.printf(userService.findUsers().toString());
         return "adminPage";
     }
 }

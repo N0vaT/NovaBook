@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,7 +21,7 @@ public class Post {
     private Long ownerId;
     private Status status;
 
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     public enum Status{
         ACTIVE, ARCHIVED, CHANGED, DELETE

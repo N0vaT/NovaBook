@@ -14,13 +14,24 @@ public class FriendInviteServiceRest implements FriendInviteService {
     private final UserWebClient userWebClient;
 
     @Override
-    public void sendFriendRequest(User user, long userToId) {
+    public void sendFriendRequest(User user, long idFriend) {
         FriendInvite invite = FriendInvite.builder()
                 .userFrom(user.getUserId())
-                .userTo(userToId)
+                .userTo(idFriend)
                 .status(FriendInvite.InviteStatus.WAITING)
                 .dateTime(LocalDateTime.now())
                 .build();
-        userWebClient.sendFriendRequest(userToId, invite);
+        userWebClient.sendFriendRequest(idFriend, invite);
+    }
+
+    @Override
+    public void declineFriendRequest(User user, long idFriend){
+        FriendInvite invite = FriendInvite.builder()
+                .userFrom(user.getUserId())
+                .userTo(idFriend)
+                .status(FriendInvite.InviteStatus.DENIED)
+                .dateTime(LocalDateTime.now())
+                .build();
+        userWebClient.sendFriendRequest(idFriend, invite);
     }
 }
