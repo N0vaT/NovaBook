@@ -1,0 +1,47 @@
+server:
+  port: 8081
+
+# tag::client_config[]
+# tag::provider_config_0[]
+spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  application:
+    name: nb_client
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    resources:
+      add-mappings: true
+
+  security:
+    oauth2:
+      client:
+        # end::provider_config_0[]
+        registration:
+          nb-client-oidc:
+            provider: spring
+            client-id: nb-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8081/login/oauth2/code/{registrationId}"
+            scope: openid
+        # end::client_config[]
+        # tag::provider_config[]
+        provider:
+          spring:
+            issuer-uri: http://localhost:9000
+#            authorization-uri: http://localhost:9000/oauth2/authorize
+#
+#            token-uri: http://localhost:9000/oauth2/token
+#            jwk-set-uri: http://localhost:9000/oauth2/jwks
+#            user-info-uri: http://localhost:9000/userinfo
+#            user-name-attribute: sub
+# end::provider_config[]
+upload:
+  avatarFile:
+    path: /Users/margetem/NovaBook/client-novabook/src/main/resources/static/images/
+#    path: D:\Project\NovaBook\client-novabook\src\main\resources\static\images\

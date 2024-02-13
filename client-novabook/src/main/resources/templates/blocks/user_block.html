@@ -1,0 +1,107 @@
+<div th:fragment="userInfo(user)">
+    <!-- Блок входящих заявок в друзья -->
+    <div class="dropdown" th:if="${visitStatus.equals('owner')}">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Заяыки в друзья
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li th:each="responseInvite, riStat : ${user.responseFriendInvites}">
+                <div class="row border">
+                    <div class="col-1">
+                        <img th:src="@{'/avatars/' + ${responseInvite.avatarFrom}}" alt="mdo" width="35" height="35" class="rounded-circle">
+                    </div>
+                    <div class="col-7">
+                        <a class="dropdown-item" th:text="${responseInvite.nameFrom}" th:href="'/client/' + ${responseInvite.userFrom}">User</a>
+                    </div>
+                    <div class="col-4 d-grid d-md-flex justify-content-md-end">
+                        <form class="container-fluid" th:method="post" th:action="@{'/client/' + ${responseInvite.userFrom} + '/friend'}" id="formAddFriend">
+                        </form>
+                        <button class="btn btn-outline-light" form="formAddFriend" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Принять</button>
+                        <button class="btn btn-outline-light" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Отклонить</button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- Блок исходящих заявок в друзья -->
+    <div class="dropdown" th:if="${visitStatus.equals('owner')}">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Исходящие запросы в друзья
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li th:each="requestInvite, riStat : ${user.requestFriendInvites}">
+                <div class="row border">
+                    <div class="col-1">
+                        <img th:src="@{'/avatars/' + ${requestInvite.avatarTo}}" alt="mdo" width="35" height="35" class="rounded-circle">
+                    </div>
+                    <div class="col-7">
+                        <a class="dropdown-item" th:text="${requestInvite.nameTo}" th:href="'/client/' + ${requestInvite.userTo}">User</a>
+                    </div>
+                    <div class="col-4 d-grid d-md-flex justify-content-md-end">
+                        <p th:text="${requestInvite.status}"></p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="row border">
+        <div class="col-2 border"></div>
+        <div class="col-8 border d-grid mx-auto">
+            <img th:src="@{'/avatars/' + ${user.avatarName}}" class="rounded mx-auto d-block img-fluid">
+            <a th:if="${visitStatus.equals('owner')}" th:href="@{/client/edit}" class="btn btn-primary"
+                    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                Редактировать
+            </a>
+        </div>
+        <div class="col-2 border"></div>
+    </div>
+    <div class="row px-4 gap-1 border">
+        <!-- Форма добавления в друзья -->
+        <form class="container-fluid" th:method="post"  th:action="@{'/client/' + ${user.id} + '/friend'}">
+            <button th:if="${visitStatus.equals('guest') and !friendStatus.equals('FRIEND')}"
+                    th:classappend="${friendStatus.equals('WAITING') ? 'disabled' : ''}" class="btn btn-primary btn-sm" type="submit">
+                Добавить в друзья
+            </button>
+        </form>
+        <!-- Форма удаления из друзей -->
+        <form class="container-fluid" th:method="delete"  th:action="@{'/client/' + ${user.id} + '/friend'}">
+            <button th:if="${visitStatus.equals('guest') and friendStatus.equals('FRIEND')}" class="btn btn-primary btn-sm" type="submit">Удалить из друзей</button>
+        </form>
+        <button th:if="${!visitStatus.equals('owner')}" class="btn btn-primary btn-sm" type="submit">Написать</button>
+    </div>
+
+    <div class="row px-2 border">
+        <h2 th:text="${user.name}">Name</h2>
+    </div>
+    <!-- Блок друзей -->
+    <div class="row border">
+        <div class="border" th:each="friend, postStat : ${user.friends}">
+            <img th:src="@{'/avatars/' + ${friend.avatarName}}" alt="mdo" width="35" height="35" class="rounded-circle">
+        </div>
+    </div>
+            <div class="row px-2 border">
+                <h5>День рождения:
+                    <small class="text-muted" th:text="${#temporals.format(user.birthday, 'dd MMMM yyyy', new java.util.Locale('ru', 'RU'))}"></small>
+                </h5>
+            </div>
+            <div class="row px-2 border">
+                <h5>Дата регистрации:
+                    <small class="text-muted" th:text="${#temporals.format(user.registrationDate, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></small>
+                </h5>
+            </div>
+            <div class="row px-2 border">
+                <h5>Телефон:
+                    <small class="text-muted" th:text="${user.phone}"></small>
+                </h5>
+            </div>
+            <div class="row px-2 border">
+                <h5>Email:
+                    <small class="text-muted" th:text="${user.email}"></small>
+                </h5>
+            </div>
+            <div class="row px-2 border">
+                <h5>Пол:
+                    <small class="text-muted" th:text="${user.sex}"></small>
+                </h5>
+            </div>
+</div>

@@ -1,0 +1,56 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: user-api
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/nb_clients
+    username: postgres
+    password: postgres
+#    password: 1111
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect:  org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+#  security:
+#    oauth2:
+#      resourceserver:
+#        opaque:
+#          issuer-uri: http://127.0.0.1:9000/oauth2/introspect
+#          client: nb-client
+#          secret: secret
+#        jwt:
+#          issuer-uri: http://127.0.0.1:9000
+#  Для отмены создания пользователя по умолчанию
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,beans
+  info:
+    env:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true

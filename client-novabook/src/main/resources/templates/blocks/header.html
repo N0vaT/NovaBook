@@ -1,0 +1,28 @@
+<div th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <header class="p-3 bg-dark text-white">
+        <div class="container-fluid">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a th:href="@{/}" class="nav-link px-2 text-white">Главная</a></li>
+                    <li><a th:href="@{/client}" class="nav-link px-2 text-white">Моя страница</a></li>
+                    <li><a th:href="@{/search}" class="nav-link px-2 text-white">Люди</a></li>
+                    <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin}" class="nav-link px-2 text-white">Панель администратора</a></li>
+                </ul>
+
+                <div sec:authorize="isAnonymous()">
+                    <a class="btn btn-outline-light me-2" id="logIn" th:href="@{/oauth2/authorization/nb-client-oidc}">
+                        Войти
+                    </a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button class="btn btn-outline-light me-2">Выйти</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>

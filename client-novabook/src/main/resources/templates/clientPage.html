@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>NovaBook</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet"  th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<header th:insert="~{blocks/header}"></header>
+
+<a th:href="@{/client/token}">Tokens</a>
+<br>
+<a th:href="@{/client/idtoken}">IdToken</a>
+
+<div class="container-fluid border">
+    <div class="row border">
+        <div class="col-3 border">
+            <div th:insert="~{blocks/user_block :: userInfo(${user})}"></div>
+        </div>
+        <div class="col-9 border">
+            <div th:insert="~{blocks/wall_block :: wall}"></div>
+        </div>
+    </div>
+</div>
+
+<footer th:insert="~{blocks/footer}"></footer>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

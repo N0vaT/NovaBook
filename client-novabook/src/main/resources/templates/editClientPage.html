@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>NovaBook</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet"  th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div th:if="${message} != null" th:insert="~{blocks/message :: message(${message})}"></div>
+<header th:insert="~{blocks/header}"></header>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editNameModal">Изменить ФИО</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPhoneModal">Изменить Телефон</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editBirthdayModal">Изменить Дату рождения</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editSexModal">Изменить Пол</button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAvatarModal">Изменить Фото</button>
+
+<div class="modal fade" id="editNameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/name}" id="nameForm" th:object="${userName}">
+                    <div class="mb-3">
+                        <label for="edit-firstName" class="col-form-label">Имя:</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" id="edit-firstName">
+                        <p style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-lastName" class="col-form-label">Фамилия:</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" id="edit-lastName">
+                        <p style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-patronymic" class="col-form-label">Отчество:</label>
+                        <input type="text" class="form-control" th:field="*{patronymic}" id="edit-patronymic">
+                        <p style="color:red" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}"></p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="nameForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editPhoneModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/phone}" id="phoneForm" th:object="${userPhone}">
+                    <div class="mb-3">
+                        <label for="edit-phone" class="col-form-label">Телефон:</label>
+                        <input type="text" class="form-control" th:field="*{phone}" id="edit-phone">
+                        <p style="color:red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="phoneForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editBirthdayModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/birthday}" id="birthdayForm" th:object="${userBirthday}">
+                    <div class="mb-3">
+                        <label for="edit-birthday" class="col-form-label">Дата рождения:</label>
+                        <input type="date" class="form-control" th:field="*{birthday}" id="edit-birthday">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="birthdayForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editSexModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form th:method="put" th:action="@{/client/edit/sex}" id="sexForm" th:object="${userSex}">
+                    <select class="form-select" th:field="*{sex}" size="6" aria-label="size 3 select example" form="sexForm">
+                        <option th:each="sex:${listSex}" th:value="${sex}" th:text="${sex.name()}"></option>
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="sexForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editAvatarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img th:src="@{'/avatars/' + ${userAvatar.avatarName}}" class="rounded mx-auto d-block" width="200" height="250">
+                <a class="btn btn-success mx-auto d-block" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    Загрузить новый постер
+                </a>
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Загрузите новое изображение</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+                    </div>
+
+                    <form th:method="put" enctype="multipart/form-data" th:action="@{/client/edit/avatar}" id="posterLoud">
+                        <input class="form-control" type="file" name="file">
+                        <br/>
+                        <button type="submit" class="btn btn-primary mb-3" form="posterLoud">Загрузить</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="sexForm">Изменить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:insert="~{blocks/footer}"></footer>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

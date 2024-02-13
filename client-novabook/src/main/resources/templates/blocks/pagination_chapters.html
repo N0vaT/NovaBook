@@ -1,0 +1,11 @@
+<nav aria-label="Page navigation" class="paging">
+    <ul class="pagination">
+        <li class="page-item" th:classappend="${wall.pageNumber == 0 ? 'disabled' : ''}">
+            <a class="page-link" th:href="@{'?pageNumber=' + ${wall.pageNumber - 1}}"
+               tabindex="-1">Предыдущая</a>
+        </li>
+        <li class="page-item" th:classappend="${wall.pageNumber >= wall.getPageCount() ? 'disabled' : ''}">
+            <a class="page-link" th:href="@{'?pageNumber=' + ${wall.pageNumber + 1}}">Следующая страница</a>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,17 @@
+<div th:fragment="message(message)">
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <!-- Position it: -->
+        <!-- - `.toast-container` for spacing between toasts -->
+        <!-- - `top-0` & `end-0` to position the toasts in the upper right corner -->
+        <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+        <div class="toast-container top-0 end-0 p-3">
+            <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto"><ya-tr-span data-index="104-0" data-translated="true" data-source-lang="en" data-target-lang="ru" data-value="Bootstrap" data-translation="Bootstrap" data-ch="0" data-type="trSpan">Уведомление</ya-tr-span></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+                <div class="toast-body"><ya-tr-span data-index="105-0" data-ch="0" data-type="trSpan" data-selected="false" th:text="${message}"> Text comment </ya-tr-span></div>
+            </div>
+        </div>
+    </div>
+</div>
