@@ -31,6 +31,6 @@ CREATE TABLE IF NOT EXISTS nb_clients_friends(
     user_from integer NOT NULL,
     user_to integer NOT NULL,
     PRIMARY KEY (user_from, user_to),
-    CONSTRAINT fk_nb_clients_friends_user_from FOREIGN KEY (user_from) REFERENCES nb_clients (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_nb_clients_friends_user_to FOREIGN KEY (user_to) REFERENCES nb_clients (user_id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT fk_nb_clients_friends_user_from FOREIGN KEY (user_from) REFERENCES nb_clients (user_id),
+    CONSTRAINT fk_nb_clients_friends_user_to FOREIGN KEY (user_to) REFERENCES nb_clients (user_id)
 );

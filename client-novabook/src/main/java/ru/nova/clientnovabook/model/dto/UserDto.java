@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.nova.clientnovabook.model.Friend;
+import ru.nova.clientnovabook.model.FriendInvite;
 import ru.nova.clientnovabook.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +25,7 @@ public class UserDto {
     private LocalDateTime registrationDate;
     private String avatarName;
     private User.Sex sex;
+    private List<Friend> friends;
+    private List<FriendInvite> requestFriendInvites;
+    private List<FriendInvite> responseFriendInvites;
 }

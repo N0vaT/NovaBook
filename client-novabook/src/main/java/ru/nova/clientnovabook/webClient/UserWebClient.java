@@ -8,7 +8,9 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
+import ru.nova.clientnovabook.model.FriendInvite;
 import ru.nova.clientnovabook.model.User;
+import ru.nova.clientnovabook.model.dto.FriendInviteDto;
 
 import java.util.List;
 
@@ -23,7 +25,11 @@ public interface UserWebClient {
     User getUserByEmail(@RequestParam("email") String email);
     @PostExchange()
     User createNewUser(@RequestBody() User user);
-    @PutExchange("/")
-    User editUser(@RequestBody() User user);
+    @PutExchange("/{id}")
+    User editUser(@PathVariable long id,
+                  @RequestBody() User user);
 
+    @PostExchange("/{userId}/invites/friends")
+    FriendInvite sendFriendRequest(@PathVariable long userId,
+                                   @RequestBody() FriendInviteDto invite);
 }

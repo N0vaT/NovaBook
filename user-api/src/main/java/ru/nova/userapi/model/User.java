@@ -1,5 +1,6 @@
 package ru.nova.userapi.model;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -41,15 +44,20 @@ public class User {
     @Enumerated(value = EnumType.ORDINAL)
     @Column(name = "sex")
     private Sex sex;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "nb_clients_friends",
             joinColumns = @JoinColumn (name = "user_from"),
             inverseJoinColumns = @JoinColumn(name = "user_to")
     )
+    @JsonIgnore
     private List<User> friends;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userFrom")
+    @OneToMany(mappedBy = "userFrom")
+//    @JsonManagedReference(value = "userFrom")
+    @JsonIgnore
     private List<FriendInvite> requestFriendInvites;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userIo")
+    @OneToMany(mappedBy = "userTo")
+//    @JsonManagedReference(value = "userTo")
+    @JsonIgnore
     private List<FriendInvite> responseFriendInvites;
     public enum Sex{
         NONE, WOMAN, MAN

@@ -19,7 +19,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAll();
     }
     @Override
-    public Comment findById(Long commentId){
+    public Comment findById(long commentId){
         return commentRepository.findById(commentId).orElseThrow(() ->
                 new CommentNotFoundException("Comment with id - " + commentId + " not found")
                 );
@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteById(Long commentId){
+    public void deleteById(long commentId){
         commentRepository.deleteById(commentId);
     }
 }

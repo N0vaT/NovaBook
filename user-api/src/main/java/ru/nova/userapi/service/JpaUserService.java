@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class JpaUserService implements UserService{
     private final UserRepository userRepository;
     @Override
     public List<User> findAll() {
@@ -31,6 +31,15 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User changeUser(long id, User user) {
+        User userRepo = userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("User with id - " + id + " not found"));
+        user.setFriends(userRepo.getFriends());
         return userRepository.save(user);
     }
 }
