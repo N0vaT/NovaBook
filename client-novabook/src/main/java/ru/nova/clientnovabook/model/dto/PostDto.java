@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PostDto {
     private String postText;
+    private Long ownerId;
 }
