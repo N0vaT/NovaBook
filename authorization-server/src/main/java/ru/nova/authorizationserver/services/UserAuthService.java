@@ -1,5 +1,6 @@
 package ru.nova.authorizationserver.services;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserAuthService implements UserDetailsService {
 
     private final UserRepository repository;
