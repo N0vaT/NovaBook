@@ -2,6 +2,7 @@ package ru.nova.clientnovabook.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.nova.clientnovabook.model.Comment;
 import ru.nova.clientnovabook.model.CountPostByOwner;
 import ru.nova.clientnovabook.model.Post;
@@ -60,5 +61,9 @@ public class RestPostService implements PostService {
         comment.setText(addCommentDto.getText());
         comment.setDateCreation(LocalDateTime.now());
         return wallWebClient.addComment(comment.getPostId(), comment);
+    }
+    @Override
+    public void deleteComment(long postId, long commentId) {
+        wallWebClient.deleteComment(postId, commentId);
     }
 }

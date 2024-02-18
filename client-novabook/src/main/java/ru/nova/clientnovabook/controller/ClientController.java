@@ -13,9 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientException;
+import ru.nova.clientnovabook.model.MetaInf;
 import ru.nova.clientnovabook.model.dto.AddCommentDto;
-import ru.nova.clientnovabook.model.dto.EditPostDto;
-import ru.nova.clientnovabook.model.dto.WallDto;
 import ru.nova.clientnovabook.service.PostService;
 import ru.nova.clientnovabook.model.Mapper;
 import ru.nova.clientnovabook.model.User;
@@ -37,6 +36,22 @@ public class ClientController {
     private final Mapper mapper;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
+    @ModelAttribute
+    public void addAttribute(Model model, Principal principal){
+        User user;
+        try{
+            user = userService.findUserByEmail(principal.getName());
+        }catch (WebClientException e){
+            user = userService.createNewUser(); //TODO
+        }
+        model.addAttribute("metaInf", MetaInf.builder()
+                        .avatarName(mapper.getAvatarName(user))
+                        .id(user.getUserId())
+                        .name(mapper.getFullName(user))
+                .build());
+    }
+
+
     @GetMapping()
 //    @GetMapping("/{smth}")
 //    @PreAuthorize("#authentication.authenticated == true")
@@ -57,7 +72,6 @@ public class ClientController {
         model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("user", mapper.toDto(user));
         model.addAttribute("commentDto", new AddCommentDto());
-        model.addAttribute("postEdit", EditPostDto.builder().build());
         model.addAttribute("visitStatus", "owner");
         return "clientPage";
     }
@@ -78,12 +92,13 @@ public class ClientController {
         return "clientPage";
     }
     @PostMapping("/{userId}/post/{postId}/comment")
-    public String addComment(@PathVariable("userId") long userId, @PathVariable("postId") long postId,
+    public String addComment(@PathVariable("userId") long userId,
+                             @PathVariable("postId") long postId,
                              AddCommentDto addCommentDto,
                              Principal principal)
     {
         if(addCommentDto.getText() == null || addCommentDto.getText().equals("")){
-            return "redirect:/client" + userId;
+            return "redirect:/client/" + userId;
         }
         User user;
         try{
@@ -94,7 +109,24 @@ public class ClientController {
         addCommentDto.setPostId(postId);
         addCommentDto.setOwnerId(user.getUserId());
         postService.addComment(addCommentDto);
-        return "redirect:/client" + userId;
+        return "redirect:/client/" + userId;
+    }
+
+    @DeleteMapping("/{userId}/post/{postId}/comment/{commentId}")
+    public String deleteComment(@PathVariable("userId") long userId,
+                                @PathVariable("postId") long postId,
+                                @PathVariable("commentId") long commentId,
+                                Principal principal)
+    {
+        //        User user;
+//        try{
+//            user = userService.findUserByEmail(principal.getName());
+////            if()
+//        }catch (WebClientException e){
+//            throw new RuntimeException(); // TODO Сделать защиту на удаление
+//        }
+        postService.deleteComment(postId, commentId);
+        return "redirect:/client/" + userId;
     }
 
     @GetMapping("/token")
