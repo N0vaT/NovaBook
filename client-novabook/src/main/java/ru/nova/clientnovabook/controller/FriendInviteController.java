@@ -3,6 +3,7 @@ package ru.nova.clientnovabook.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,18 @@ public class FriendInviteController {
             throw new RuntimeException(); // TODO
         }
         friendInviteService.sendFriendRequest(user, id);
+        return "redirect:/client/" + id;
+    }
+    @DeleteMapping
+    public String declineFriendRequest(@PathVariable long id,
+                                    Principal principal){
+        User user;
+        try{
+            user = userService.findUserByEmail(principal.getName());
+        }catch (WebClientException e){
+            throw new RuntimeException(); // TODO
+        }
+        friendInviteService.declineFriendRequest(user, id);
         return "redirect:/client/" + id;
     }
 }

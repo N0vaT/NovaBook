@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientException;
 import ru.nova.clientnovabook.model.MetaInf;
 import ru.nova.clientnovabook.model.dto.AddCommentDto;
+import ru.nova.clientnovabook.service.FriendCheckerService;
 import ru.nova.clientnovabook.service.PostService;
 import ru.nova.clientnovabook.model.mapper.UserMapper;
 import ru.nova.clientnovabook.model.User;
@@ -35,21 +36,22 @@ public class ClientController {
     private final PostService postService;
     private final UserMapper userMapper;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
+    private final FriendCheckerService friendCheckerService;
 
-    @ModelAttribute
-    public void addAttribute(Model model, Principal principal){
-        User user;
-        try{
-            user = userService.findUserByEmail(principal.getName());
-        }catch (WebClientException e){
-            user = userService.createNewUser(); //TODO
-        }
-        model.addAttribute("metaInf", MetaInf.builder()
-                        .avatarName(userMapper.getAvatarName(user.getAvatarName(), user.getSex()))
-                        .id(user.getUserId())
-                        .name(userMapper.getFullName(user.getFirstName(), user.getLastName(), user.getPatronymic()))
-                .build());
-    }
+//    @ModelAttribute
+//    public void addAttribute(Model model, Principal principal){
+//        User user;
+//        try{
+//            user = userService.findUserByEmail(principal.getName());
+//        }catch (WebClientException e){
+//            user = userService.createNewUser(); //TODO
+//        }
+//        model.addAttribute("metaInf", MetaInf.builder()
+//                        .avatarName(userMapper.getAvatarName(user.getAvatarName(), user.getSex()))
+//                        .id(user.getUserId())
+//                        .name(userMapper.getFullName(user.getFirstName(), user.getLastName(), user.getPatronymic()))
+//                .build());
+//    }
 
 
     @GetMapping()
@@ -68,12 +70,7 @@ public class ClientController {
         }catch (WebClientException e){
             user = userService.createNewUser(); //TODO
         }
-        model.addAttribute("wall", wallService.getWallByOwnerId(user.getUserId(), pageNumber, pageSize, direction, sortByField));
-        model.addAttribute("postDto", PostDto.builder().build());
-        model.addAttribute("user", userMapper.toDto(user));
-        model.addAttribute("commentDto", new AddCommentDto());
-        model.addAttribute("visitStatus", "owner");
-        return "clientPage";
+        return "redirect:/client/" + user.getUserId();
     }
 
     @GetMapping("/{id}")
@@ -82,13 +79,27 @@ public class ClientController {
                                   @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
                                   @RequestParam(required = false, defaultValue = "DESC") String direction,
                                   @RequestParam(required = false, defaultValue = "dateCreation") String sortByField,
+                                  Principal principal,
                                   Model model
     ){
-        model.addAttribute("user", userMapper.toDto(userService.findUserById(id)));
+        User user;
+        try{
+            user = userService.findUserByEmail(principal.getName());
+        }catch (WebClientException e){
+            user = userService.createNewUser(); //TODO
+        }
+        model.addAttribute("metaInf", MetaInf.builder()
+                .avatarName(userMapper.getAvatarName(user.getAvatarName(), user.getSex()))
+                .id(user.getUserId())
+                .name(userMapper.getFullName(user.getFirstName(), user.getLastName(), user.getPatronymic()))
+                .build());
+        User userPage = userService.findUserById(id);
+        model.addAttribute("user", userMapper.toDto(userPage));
         model.addAttribute("wall", wallService.getWallByOwnerId(id, pageNumber, pageSize, direction, sortByField));
         model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("commentDto", new AddCommentDto());
-        model.addAttribute("visitStatus", "guest");
+        model.addAttribute("visitStatus", id == user.getUserId() ? "owner" : "guest");
+        model.addAttribute("friendStatus", friendCheckerService.check(user, userPage).toString());
         return "clientPage";
     }
     @PostMapping("/{userId}/post/{postId}/comment")

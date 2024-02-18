@@ -11,12 +11,6 @@ public class HomeController {
 
     @GetMapping
     public String getIndex(){
-        System.out.println("getIndex isAuthenticated() - " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
-        System.out.println("getIndex isAuthenticated() - " + SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        System.out.println("getIndex isAuthenticated() - " + SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
-        System.out.println("getIndex isAuthenticated() - " + SecurityContextHolder.getContext().getAuthentication().getDetails().toString());
-        System.out.println("getIndex isAuthenticated() - " + SecurityContextHolder.getContext().getAuthentication().getName());
-        System.out.println("getIndex isAuthenticated() - " + SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         return "index";
     }
 }

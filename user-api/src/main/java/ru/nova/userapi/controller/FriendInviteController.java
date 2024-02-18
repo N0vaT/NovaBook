@@ -44,8 +44,11 @@ public class FriendInviteController {
     public ResponseEntity<FriendInvite> saveFriendInviteTo(@PathVariable long userId,
                                                            @RequestBody FriendInviteDto friendInviteDto)
     {
-        System.out.println("");
-        return ResponseEntity.ok(friendInviteService.save(friendInviteDto));
+        if(friendInviteDto.getStatus().equals(FriendInvite.InviteStatus.DENIED)){
+            return ResponseEntity.ok(friendInviteService.save(friendInviteDto));
+        }else{
+            return ResponseEntity.ok(friendInviteService.save(friendInviteDto));
+        }
     }
     @PutMapping("/{inviteId}")
     public ResponseEntity<FriendInvite> editUser(@PathVariable long userId,
