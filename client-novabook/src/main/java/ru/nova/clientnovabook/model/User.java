@@ -25,7 +25,7 @@ public class User {
     private String avatarName;
     private Sex sex;
     public enum Sex{
-        WOMAN, MAN
+        NONE, WOMAN, MAN
     }
 
 }

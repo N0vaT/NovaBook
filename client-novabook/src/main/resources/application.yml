@@ -41,3 +41,6 @@ spring:
 #            user-info-uri: http://localhost:9000/userinfo
 #            user-name-attribute: sub
 # end::provider_config[]
+upload:
+  avatarFile:
+    path: /Users/margetem/NovaBook/client-novabook/src/main/resources/static/images/
