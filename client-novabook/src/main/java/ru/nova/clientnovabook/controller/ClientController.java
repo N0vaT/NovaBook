@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientException;
 import ru.nova.clientnovabook.model.dto.AddCommentDto;
+import ru.nova.clientnovabook.model.dto.EditPostDto;
 import ru.nova.clientnovabook.model.dto.WallDto;
 import ru.nova.clientnovabook.service.PostService;
 import ru.nova.clientnovabook.model.Mapper;
@@ -32,6 +33,7 @@ public class ClientController {
 
     private final UserService userService;
     private final WallService wallService;
+    private final PostService postService;
     private final Mapper mapper;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
@@ -55,6 +57,7 @@ public class ClientController {
         model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("user", mapper.toDto(user));
         model.addAttribute("commentDto", new AddCommentDto());
+        model.addAttribute("postEdit", EditPostDto.builder().build());
         model.addAttribute("visitStatus", "owner");
         return "clientPage";
     }
@@ -73,6 +76,25 @@ public class ClientController {
         model.addAttribute("commentDto", new AddCommentDto());
         model.addAttribute("visitStatus", "guest");
         return "clientPage";
+    }
+    @PostMapping("/{userId}/post/{postId}/comment")
+    public String addComment(@PathVariable("userId") long userId, @PathVariable("postId") long postId,
+                             AddCommentDto addCommentDto,
+                             Principal principal)
+    {
+        if(addCommentDto.getText() == null || addCommentDto.getText().equals("")){
+            return "redirect:/client" + userId;
+        }
+        User user;
+        try{
+            user = userService.findUserByEmail(principal.getName());
+        }catch (WebClientException e){
+            user = userService.createNewUser(); //TODO
+        }
+        addCommentDto.setPostId(postId);
+        addCommentDto.setOwnerId(user.getUserId());
+        postService.addComment(addCommentDto);
+        return "redirect:/client" + userId;
     }
 
     @GetMapping("/token")

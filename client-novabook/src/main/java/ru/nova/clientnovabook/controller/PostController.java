@@ -23,6 +23,9 @@ public class PostController {
 
     @PostMapping
     public String addPost(PostDto postDto, Principal principal){
+        if(postDto.getPostText() == null || postDto.getPostText().equals("")){
+            return "redirect:/client";
+        }
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
@@ -31,6 +34,11 @@ public class PostController {
         }
         postDto.setOwnerId(user.getUserId());
         postService.createPost(postDto);
+        return "redirect:/client";
+    }
+    @PutMapping("/{id}")
+    public String changePost(@PathVariable("id") long postId){
+
         return "redirect:/client";
     }
 
@@ -49,7 +57,11 @@ public class PostController {
     @PostMapping("/{id}/comment")
     public String addComment(@PathVariable("id") long postId,
                              AddCommentDto addCommentDto,
-                             Principal principal){
+                             Principal principal)
+    {
+        if(addCommentDto.getText() == null || addCommentDto.getText().equals("")){
+            return "redirect:/client";
+        }
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());

@@ -10,6 +10,7 @@ import ru.nova.clientnovabook.model.dto.PostDto;
 import ru.nova.clientnovabook.webClient.WallWebClient;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
