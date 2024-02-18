@@ -18,11 +18,11 @@ public class UserAuthService implements UserDetailsService {
     private final UserRepository repository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        Optional<User> user = repository.findByEmail(username);
+    public UserDetails loadUserByUsername(String email) {
+        Optional<User> user = repository.findByEmail(email.toLowerCase());
         System.out.println(user);
         return user.map(SecurityUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User with username - " + username + " not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User with username - " + email + " not found"));
     }
 
 //    @Bean
