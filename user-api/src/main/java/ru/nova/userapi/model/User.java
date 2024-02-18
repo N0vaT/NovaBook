@@ -1,23 +1,24 @@
 package ru.nova.userapi.model;
 
-import com.fasterxml.jackson.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
-import org.hibernate.annotations.WhereJoinTable;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 @Entity
 @Table(name = "nb_clients")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = {"userId"})
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "userId")
@@ -44,7 +45,7 @@ public class User {
     @Enumerated(value = EnumType.ORDINAL)
     @Column(name = "sex")
     private Sex sex;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "nb_clients_friends",
             joinColumns = @JoinColumn (name = "user_from"),
             inverseJoinColumns = @JoinColumn(name = "user_to")
@@ -62,5 +63,4 @@ public class User {
     public enum Sex{
         NONE, WOMAN, MAN
     }
-
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,9 +26,9 @@ public class User {
     private LocalDateTime registrationDate;
     private String avatarName;
     private Sex sex;
-    private List<Friend> friends;
-    private List<FriendInvite> requestFriendInvites;
-    private List<FriendInvite> responseFriendInvites;
+    private List<Friend> friends = new ArrayList<>();
+    private List<FriendInvite> requestFriendInvites = new ArrayList<>();
+    private List<FriendInvite> responseFriendInvites = new ArrayList<>();
     public enum Sex{
         NONE(), WOMAN, MAN;
     }

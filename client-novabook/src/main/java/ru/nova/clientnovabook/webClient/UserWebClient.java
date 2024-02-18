@@ -1,6 +1,5 @@
 package ru.nova.clientnovabook.webClient;
 
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,7 +9,6 @@ import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 import ru.nova.clientnovabook.model.FriendInvite;
 import ru.nova.clientnovabook.model.User;
-import ru.nova.clientnovabook.model.dto.FriendInviteDto;
 
 import java.util.List;
 
@@ -31,5 +29,5 @@ public interface UserWebClient {
 
     @PostExchange("/{userId}/invites/friends")
     FriendInvite sendFriendRequest(@PathVariable long userId,
-                                   @RequestBody() FriendInviteDto invite);
+                                   @RequestBody() FriendInvite invite);
 }

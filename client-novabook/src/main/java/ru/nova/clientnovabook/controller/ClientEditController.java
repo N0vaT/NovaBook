@@ -1,7 +1,6 @@
 package ru.nova.clientnovabook.controller;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -12,18 +11,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.nova.clientnovabook.exception.FileNotImageException;
-import ru.nova.clientnovabook.model.Mapper;
+import ru.nova.clientnovabook.model.mapper.UserMapper;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.model.dto.*;
 import ru.nova.clientnovabook.service.FileUploadService;
 import ru.nova.clientnovabook.service.UserService;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 
 @Controller
 @RequestMapping("/client/edit")
@@ -31,7 +27,7 @@ import java.util.Collections;
 @Log4j2
 public class ClientEditController {
     private final UserService userService;
-    private final Mapper userMapper;
+    private final UserMapper userMapper;
     private final FileUploadService fileUploadService;
     @GetMapping()
     public String getEditClientPage(Model model, Principal principal){
@@ -67,7 +63,7 @@ public class ClientEditController {
                         .sex(user.getSex())
                 .build());
         model.addAttribute("userAvatar", EditUserAvatarDto.builder()
-                        .avatarName(userMapper.getAvatarName(user))
+                        .avatarName(userMapper.getAvatarName(user.getAvatarName(), user.getSex()))
                 .build());
         return "editClientPage";
     }
@@ -91,7 +87,7 @@ public class ClientEditController {
         user.setLastName(userNameDto.getLastName());
         user.setPatronymic(userNameDto.getPatronymic());
         userService.save(user);
-        redirectAttributes.addFlashAttribute("message", "Имя успешно изменено на " + userMapper.getFullName(user));
+        redirectAttributes.addFlashAttribute("message", "Имя успешно изменено на " + userMapper.getFullName(user.getFirstName(), user.getLastName(), user.getPatronymic()));
         return "redirect:/client/edit";
     }
     @PutMapping("/phone")
