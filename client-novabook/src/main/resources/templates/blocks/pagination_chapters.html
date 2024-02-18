@@ -1,0 +1,21 @@
+<nav aria-label="Page navigation" class="paging">
+    <ul class="pagination" th:if="${chapters.page.totalPages > 1}">
+        <li class="page-item" th:classappend="${!chapters.paging.isPrevEnabled()? 'disabled' : ''}">
+            <a class="page-link" th:href="@{'?pageNumber=' + ${chapters.paging.pageNumber - 1}}"
+               tabindex="-1">Предыдущая</a>
+        </li>
+        <th:block th:each="item : ${chapters.paging.getItems()}">
+            <li class="page-item" th:classappend="${item.index == chapters.paging.pageNumber? 'active' : ''}"
+                th:if="${item.pageItemType.name() == 'PAGE'}">
+                <a class="page-link" th:href="@{'?pageNumber=' + ${item.index}}"
+                   th:text="${item.index}"></a>
+            </li>
+            <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                <a class="page-link" href="#">...</a>
+            </li>
+        </th:block>
+        <li class="page-item" th:classappend="${!chapters.paging.isNextEnabled()? 'disabled' : ''}">
+            <a class="page-link" th:href="@{'?pageNumber=' + ${chapters.paging.pageNumber + 1}}">Следующая страница</a>
+        </li>
+    </ul>
+</nav>

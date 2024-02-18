@@ -32,6 +32,7 @@ public class RestWallService implements WallService {
     @Override
     public Post createPost(PostDto postDto) {
         Post post = new Post();
+        post.setPostTitle(postDto.getPostTitle());
         post.setPostText(postDto.getPostText());
         post.setDateCreation(LocalDateTime.now());
         post.setOwnerId(postDto.getOwnerId());
@@ -41,5 +42,10 @@ public class RestWallService implements WallService {
     @Override
     public Post editPost(Post post) {
         return wallWebClient.editPost(post);
+    }
+
+    @Override
+    public void deletePost(long postId) {
+        wallWebClient.deletePost(postId);
     }
 }

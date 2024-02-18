@@ -1,6 +1,8 @@
 package ru.nova.wallapi.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.nova.wallapi.exception.PostNotFoundException;
 import ru.nova.wallapi.model.Post;
@@ -15,12 +17,18 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
 
     @Override
-    public List<Post> findAll() {
+    public List<Post> findAll(int pageNumber, int pageSize, String direction, String sortByField) {
+        Sort.Direction sortDirection = direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(sortDirection, sortByField);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
         return postRepository.findAll();
     }
     @Override
-    public List<Post> findByOwnerId(Long ownerId) {
-        return postRepository.findAllByOwnerId(ownerId);
+    public List<Post> findByOwnerId(Long ownerId, int pageNumber, int pageSize, String direction, String sortByField) {
+        Sort.Direction sortDirection = direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(sortDirection, sortByField);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        return postRepository.findAllByOwnerId(ownerId, pageRequest);
     }
 
     @Override
@@ -29,16 +37,19 @@ public class PostServiceImpl implements PostService{
                 new PostNotFoundException("Post with id - " + postId + " not found")
                 );
     }
-
     @Override
     @Transactional
     public Post save(Post post) {
         return postRepository.save(post);
     }
-
     @Override
     @Transactional
-    public void deleteById(Long postId) {
-        postRepository.deleteById(postId);
+    public boolean deleteById(Long postId) {
+        try{
+            postRepository.deleteById(postId);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 }

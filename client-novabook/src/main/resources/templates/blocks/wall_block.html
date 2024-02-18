@@ -1,0 +1,28 @@
+<div th:fragment="wall">
+    <form th:if="${visitStatus.equals('owner')}" th:method="post"  th:action="@{/client/post}" id="postForm" th:object="${postDto}">
+        <div class="mb-3 border">
+            <input th:type="text" class="form-control" placeholder="Заголовок" th:field="*{postTitle}">
+            <input th:type="text" class="form-control" placeholder="Текст" th:field="*{postText}">
+            <button type="submit" class="btn btn-primary" form="postForm">Добавить</button>
+        </div>
+    </form>
+    <div class="border" th:each="onePost:${posts}">
+        <div class="row px-2 border">
+            <div class="col-2 border">
+                <small class="text-muted" th:text="${#temporals.format(onePost.dateCreation, 'dd MMMM yyyy HH:mm', new java.util.Locale('ru', 'RU'))}"></small>
+            </div>
+        </div>
+        <div class="row px-2 border">
+            <h5 class="text-muted" th:text="${onePost.postTitle}"></h5>
+        </div>
+        <div class="row px-2 border">
+            <h6 class="text-muted" th:text="${onePost.postText}"></h6>
+        </div>
+        <div th:if="${visitStatus.equals('owner')}" class="d-grid gap-2 d-md-flex justify-content-md-end border">
+            <button type="submit" class="btn btn-outline-success">Изменить</button>
+            <form id="deletePostForm" th:method="delete" th:action="@{/client/post/{id} (id=${onePost.postId})}">
+                <button type="submit" form="deletePostForm" class="btn btn-outline-danger">Удалить</button>
+            </form>
+        </div>
+    </div>
+</div>

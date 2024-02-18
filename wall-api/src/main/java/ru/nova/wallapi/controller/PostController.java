@@ -19,13 +19,15 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<Post>> getPosts(
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
-            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false, defaultValue = "25") int pageSize,
+            @RequestParam(required = false, defaultValue = "DESC") String direction,
+            @RequestParam(required = false, defaultValue = "dateCreation") String sortByField,
             @RequestParam(required = false) Long ownerId)
     {
         if(ownerId == null){
-            return ResponseEntity.ok(postService.findAll());
+            return ResponseEntity.ok(postService.findAll(pageNumber, pageSize, direction, sortByField));
         }
-        return ResponseEntity.ok(postService.findByOwnerId(ownerId));
+        return ResponseEntity.ok(postService.findByOwnerId(ownerId, pageNumber, pageSize, direction, sortByField));
     }
 
     @GetMapping("/{id}")
@@ -51,5 +53,14 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public Post editPost(@RequestBody Post post){
         return postService.save(post);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deletePost(@PathVariable Long id) {
+        boolean isRemoved = postService.deleteById(id);
+        if (!isRemoved) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }
