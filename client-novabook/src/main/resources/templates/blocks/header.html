@@ -5,9 +5,9 @@
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a th:href="@{/}" class="nav-link px-2 text-white">Главная</a></li>
-                    <li><a th:href="@{/}" class="nav-link px-2 text-white">Люди</a></li>
-                    <li><a th:href="@{/}" class="nav-link px-2 text-white">Блоги</a></li>
-                    <li><a th:href="@{/}" class="nav-link px-2 text-white">Дневник</a></li>
+                    <li><a th:href="@{/client}" class="nav-link px-2 text-white">Клиент</a></li>
+<!--                    <li><a th:href="@{/}" class="nav-link px-2 text-white">Блоги</a></li>-->
+<!--                    <li><a th:href="@{/}" class="nav-link px-2 text-white">Дневник</a></li>-->
                     <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin}" class="nav-link px-2 text-white">Панель администратора</a></li>
                 </ul>
 
@@ -21,7 +21,7 @@
                 </div>
                 <form sec:authorize="isAuthenticated()"  th:action="@{/logout}" method="post">
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-outline-dark">Выйти</button>
+                        <button class="btn btn-outline-light me-2">Выйти</button>
                     </div>
                 </form>
 
