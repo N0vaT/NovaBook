@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -32,6 +33,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import ru.nova.authorizationserver.config.properties.AuthorizationServerProperties;
 import ru.nova.authorizationserver.config.utils.JwkUtils;
+import ru.nova.authorizationserver.services.UserService;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -123,12 +125,13 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer() {
+    public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer(UserService userService) {
         return context -> {
             Authentication principal = context.getPrincipal();
             if(context.getTokenType().getValue().equals("access_token")){
-                Collection<? extends GrantedAuthority> authorities = context.getPrincipal().getAuthorities();
+                Collection<? extends GrantedAuthority> authorities = principal.getAuthorities();
                 context.getClaims().claim("authorities", authorities.stream().map(GrantedAuthority::getAuthority).toList());
+                context.getClaims().claim("auth_id", userService.getUserIdByEmail(principal.getName()));
             }
         };
     }

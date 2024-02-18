@@ -24,7 +24,6 @@ public class UserAuthService implements UserDetailsService {
         return user.map(SecurityUser::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username - " + email + " not found"));
     }
-
 //    @Bean
 //    public ApplicationRunner dataLoader(
 //            UserRepository repo, PasswordEncoder encoder) {

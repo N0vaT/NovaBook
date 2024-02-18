@@ -3,5 +3,6 @@ package ru.nova.authorizationserver.services;
 import ru.nova.authorizationserver.model.dto.RegistrationDto;
 
 public interface UserService {
-    public boolean saveUser(RegistrationDto registrationDto);
+    boolean saveUser(RegistrationDto registrationDto);
+    long getUserIdByEmail(String email);
 }

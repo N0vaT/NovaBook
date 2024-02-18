@@ -33,12 +33,12 @@ public class ClientController {
 //    @PreAuthorize("#something == authentication.name")
 //    public String getClientPage(@PathVariable("smth") String something, Model model, Principal principal){
     public String getClientPage(Model model, Principal principal, Authentication authentication){
+//        userService.findUserByAuthorityId(authentication.)
         System.out.println(authentication.getAuthorities().toString());
-
 //        User user = userService.findUserByName("LOL");
 //        System.out.println(user.toString());
         if(principal!=null) {
-            User user = userService.getUserByEmail(principal.getName());
+            User user = userService.findUserById(1L);
             System.out.println(user);
             String name = principal.getName();
             model.addAttribute("user", name);
