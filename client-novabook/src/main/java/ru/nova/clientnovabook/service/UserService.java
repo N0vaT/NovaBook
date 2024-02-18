@@ -8,8 +8,7 @@ public interface UserService {
 
     List<User> findUsers();
     User findUserById(long userId);
-    User findUserByAuthorityId(long userAuthorityId);
-//    User findUserByName(String username);
-//    User getUserByEmail(String email);
+    User findUserByEmail(String email);
+    User createNewUser();
 //    void deleteUser(Long userId);
 }

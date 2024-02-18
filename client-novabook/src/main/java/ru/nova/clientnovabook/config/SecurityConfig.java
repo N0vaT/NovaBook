@@ -82,12 +82,12 @@ public class SecurityConfig {
             OidcUser oidcUser = delegate.loadUser(userRequest);
             OAuth2AccessToken accessToken = userRequest.getAccessToken();
             Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
-            String auth_id = null;
+//            String auth_id = null;
             try {
                 JWT jwt = JWTParser.parse(accessToken.getTokenValue());
                 JWTClaimsSet claimSet = jwt.getJWTClaimsSet();
                 Collection<String> userAuthorities = claimSet.getStringListClaim("authorities");
-                auth_id = claimSet.getClaim("auth_id").toString();
+//                auth_id = claimSet.getClaim("auth_id").toString();
                 mappedAuthorities.addAll(userAuthorities.stream()
                         .map(SimpleGrantedAuthority::new)
                         .toList());
@@ -96,7 +96,7 @@ public class SecurityConfig {
             }
             oidcUser = new DefaultOidcUser(mappedAuthorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
 //            if(oidcUser.getAttributes() != null){
-                oidcUser.getAttributes().putIfAbsent("auth_id", auth_id);
+//                oidcUser.getAttributes().putIfAbsent("auth_id", auth_id);
 //            }
 //            oidcUser.getUserInfo().getClaims().put("auth_id", auth_id);
             return oidcUser;

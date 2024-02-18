@@ -13,7 +13,18 @@
 <br>
 <a th:href="@{/client/idtoken}">IdToken</a>
 
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            <div th:insert="~{blocks/user_block :: userInfo(${user})}"></div>
+        </div>
+        <div class="col-10">
+            Колонка
+        </div>
+    </div>
+</div>
 
+<footer th:insert="~{blocks/footer}"></footer>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

@@ -5,11 +5,15 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.nova.clientnovabook.config.UserWebClient;
 import ru.nova.clientnovabook.model.User;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,11 +41,20 @@ public class RestUserService implements UserService{
         return userWebClient.getUserById(userId);
     }
     @Override
-    public User findUserByAuthorityId(long userAuthorityId) {
-        return userWebClient.findUserByAuthorityId(userAuthorityId);
+    public User findUserByEmail(String email) {
+        return userWebClient.getUserByEmail(email);
     }
-
-//    @Override
+    @Override
+    public User createNewUser() {
+        System.out.println(SecurityContextHolder.getContext().toString());
+        Principal principal = SecurityContextHolder.getContext().getAuthentication();
+        User user = User.builder()
+                .email(principal.getName())
+                .registrationDate(LocalDateTime.now())
+                .build();
+        return userWebClient.createNewUser(user);
+    }
+    //    @Override
 //    public User findUserByName(String username) {
 //        System.out.println("Im this");
 ////        String str = welcomeClient.getWelcome();
