@@ -42,23 +42,8 @@ import java.util.Set;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-//    @Bean
-//    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeRequests(
-//                        authorizeRequests -> authorizeRequests
-//                                .mvcMatchers("/", "/css/**","/js/**").permitAll()
-//                                .anyRequest().authenticated()
-//                )
-//                .oauth2Login(
-//                        oauth2Login ->
-//                                oauth2Login.loginPage("/oauth2/authorization/nb-client-oidc"))
-//                .oauth2Client(withDefaults());
-////                .logout(withDefaults());
-//        return http.build();
-//    }
 
     private final ClientRegistrationRepository clientRegistrationRepository;
-//    private final LogoutHandler logoutService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
@@ -68,7 +53,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/css/**","/js/**").permitAll()
+                        .requestMatchers("/", "/css/**","/js/**", "/logged-out").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(
@@ -80,13 +65,14 @@ public class SecurityConfig {
                         }
                 )
                 .oauth2Client(Customizer.withDefaults())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-//                                .addLogoutHandler(logoutService)
-                        .logoutSuccessHandler(oidcLogoutSuccessHandler())
-//                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-                );
+                .logout(logout ->
+                        logout.logoutSuccessHandler(oidcLogoutSuccessHandler(clientRegistrationRepository)));
         return http.build();
+    }
+    private LogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
+        OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+        oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}/logged-out");
+        return oidcLogoutSuccessHandler;
     }
 
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
@@ -111,13 +97,6 @@ public class SecurityConfig {
         };
     }
 
-    private LogoutSuccessHandler oidcLogoutSuccessHandler() {
-        OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler =
-                new OidcClientInitiatedLogoutSuccessHandler(this.clientRegistrationRepository);
-        oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
-
-        return oidcLogoutSuccessHandler;
-    }
     @Bean
     @RequestScope
     public UserService userService(
