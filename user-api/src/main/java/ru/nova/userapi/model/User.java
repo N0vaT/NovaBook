@@ -34,12 +34,12 @@ public class User {
     private LocalDateTime registrationDate;
     @Column(name = "avatar_name")
     private String avatarName;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(value = EnumType.ORDINAL)
     @Column(name = "sex")
     private Sex sex;
 
     public enum Sex{
-        WOMAN, MEAN
+        WOMAN, MAN
     }
 
 }

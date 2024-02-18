@@ -128,11 +128,11 @@ public class AuthorizationServerConfig {
     public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer(UserService userService) {
         return context -> {
             Authentication principal = context.getPrincipal();
-            if(context.getTokenType().getValue().equals("access_token")){
+//            if(context.getTokenType().getValue().equals("access_token")){
                 Collection<? extends GrantedAuthority> authorities = principal.getAuthorities();
                 context.getClaims().claim("authorities", authorities.stream().map(GrantedAuthority::getAuthority).toList());
                 context.getClaims().claim("auth_id", userService.getUserIdByEmail(principal.getName()));
-            }
+//            }
         };
     }
 }
