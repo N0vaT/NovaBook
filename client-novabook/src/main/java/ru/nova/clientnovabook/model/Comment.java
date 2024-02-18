@@ -17,4 +17,6 @@ public class Comment {
     private Long postId;
     private String text;
     private LocalDateTime dateCreation;
+    private String avatarName;
+    private String name;
 }

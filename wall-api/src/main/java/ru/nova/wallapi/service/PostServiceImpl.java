@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.nova.wallapi.exception.PostNotFoundException;
+import ru.nova.wallapi.model.CountPostByOwner;
 import ru.nova.wallapi.model.Post;
 import ru.nova.wallapi.repository.PostRepository;
 
@@ -32,8 +33,10 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Integer getCountPostsByOwnerId(Long ownerId){
-        return postRepository.countPostByOwnerId(ownerId);
+    public CountPostByOwner getCountPostsByOwnerId(Long ownerId){
+        return CountPostByOwner.builder()
+                .postCount(postRepository.countPostByOwnerId(ownerId))
+                .build();
     }
 
     @Override

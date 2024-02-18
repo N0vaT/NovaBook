@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.*;
 import ru.nova.clientnovabook.model.Comment;
+import ru.nova.clientnovabook.model.CountPostByOwner;
 import ru.nova.clientnovabook.model.Post;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface WallWebClient {
                                  @RequestParam(required = false, defaultValue = "DESC") String direction,
                                  @RequestParam(required = false, defaultValue = "dateCreation") String sortByField);
     @GetExchange("/cnt")
-    Integer getCountPostsByOwnerId(@RequestParam("ownerId") long ownerId);
+    CountPostByOwner getCountPostsByOwnerId(@RequestParam("ownerId") long ownerId);
     @PostExchange()
     Post createPost(@RequestBody() Post post);
     @PutExchange()

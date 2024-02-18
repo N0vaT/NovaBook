@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nova.wallapi.exception.PostNotFoundException;
 import ru.nova.wallapi.model.Comment;
+import ru.nova.wallapi.model.CountPostByOwner;
 import ru.nova.wallapi.model.Post;
 import ru.nova.wallapi.service.CommentService;
 import ru.nova.wallapi.service.PostService;
@@ -66,12 +67,12 @@ public class PostController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
     @GetMapping("/cnt")
-    public int getCountPostsByOwnerId(@RequestParam("ownerId") long ownerId){
+    public CountPostByOwner getCountPostsByOwnerId(@RequestParam("ownerId") long ownerId){
         return postService.getCountPostsByOwnerId(ownerId);
     }
     @PostMapping("/{postId}/comment")
     @ResponseStatus(HttpStatus.OK)
-    Comment addComment(@PathVariable long postId,
+    public Comment addComment(@PathVariable long postId,
                        @RequestBody Comment comment){
         commentService.save(comment);
         return null;
