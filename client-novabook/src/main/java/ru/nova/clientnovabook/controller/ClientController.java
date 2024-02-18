@@ -13,16 +13,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientException;
-import ru.nova.clientnovabook.service.WallService;
-import ru.nova.clientnovabook.webClient.WallWebClient;
+import ru.nova.clientnovabook.model.dto.AddCommentDto;
+import ru.nova.clientnovabook.model.dto.WallDto;
+import ru.nova.clientnovabook.service.PostService;
 import ru.nova.clientnovabook.model.Mapper;
-import ru.nova.clientnovabook.model.Post;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.model.dto.PostDto;
 import ru.nova.clientnovabook.service.UserService;
+import ru.nova.clientnovabook.service.WallService;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/client")
@@ -39,24 +39,36 @@ public class ClientController {
 //    @GetMapping("/{smth}")
 //    @PreAuthorize("#authentication.authenticated == true")
 //    public String getClientPage(@PathVariable("smth") String something, Model model, Principal principal){
-    public String getClientPage(Model model, Principal principal){
+    public String getClientPage(@RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+                                @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+                                @RequestParam(required = false, defaultValue = "DESC") String direction,
+                                @RequestParam(required = false, defaultValue = "dateCreation") String sortByField,
+                                Model model, Principal principal
+    ){
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
         }catch (WebClientException e){
             user = userService.createNewUser(); //TODO
         }
-        model.addAttribute("posts", wallService.findPostsByOwnerId(user.getUserId()));
+        model.addAttribute("wall", wallService.getWallByOwnerId(user.getUserId(), pageNumber, pageSize, direction, sortByField));
         model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("user", mapper.toDto(user));
+        model.addAttribute("commentDto", new AddCommentDto());
         model.addAttribute("visitStatus", "owner");
         return "clientPage";
     }
 
     @GetMapping("/{id}")
-    public String getClientIdPage(@PathVariable("id") long id, Model model){
+    public String getClientIdPage(@PathVariable("id") long id,
+                                  @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+                                  @RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+                                  @RequestParam(required = false, defaultValue = "DESC") String direction,
+                                  @RequestParam(required = false, defaultValue = "dateCreation") String sortByField,
+                                  Model model
+    ){
         model.addAttribute("user", mapper.toDto(userService.findUserById(id)));
-        model.addAttribute("posts", wallService.findPostsByOwnerId(id));
+        model.addAttribute("wall", wallService.getWallByOwnerId(id, pageNumber, pageSize, direction, sortByField));
         model.addAttribute("postDto", PostDto.builder().build());
         model.addAttribute("visitStatus", "guest");
         return "clientPage";

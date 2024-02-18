@@ -1,4 +1,4 @@
-package ru.nova.clientnovabook.model;
+package ru.nova.clientnovabook.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {
-    private Long commentId;
+@Builder
+public class AddCommentDto {
     private Long ownerId;
     private Long postId;
     private String text;
-    private LocalDateTime dateCreation;
 }

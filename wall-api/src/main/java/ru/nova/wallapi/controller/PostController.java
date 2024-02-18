@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nova.wallapi.exception.PostNotFoundException;
+import ru.nova.wallapi.model.Comment;
 import ru.nova.wallapi.model.Post;
+import ru.nova.wallapi.service.CommentService;
 import ru.nova.wallapi.service.PostService;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping
     public ResponseEntity<List<Post>> getPosts(
@@ -45,7 +48,6 @@ public class PostController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public Post savePost(@RequestBody Post post){
-        System.out.println("");
         return postService.save(post);
     }
 
@@ -56,11 +58,22 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deletePost(@PathVariable Long id) {
+    public ResponseEntity<Long> deletePost(@PathVariable long id) {
         boolean isRemoved = postService.deleteById(id);
         if (!isRemoved) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+    @GetMapping("/cnt")
+    public int getCountPostsByOwnerId(@RequestParam("ownerId") long ownerId){
+        return postService.getCountPostsByOwnerId(ownerId);
+    }
+    @PostMapping("/{postId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    Comment addComment(@PathVariable long postId,
+                       @RequestBody Comment comment){
+        commentService.save(comment);
+        return null;
     }
 }
