@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "nb_clients")
@@ -37,6 +38,8 @@ public class User {
     @Enumerated(value = EnumType.ORDINAL)
     @Column(name = "sex")
     private Sex sex;
+//    @ManyToMany
+//    private List<User> friends;
 
     public enum Sex{
         NONE, WOMAN, MAN

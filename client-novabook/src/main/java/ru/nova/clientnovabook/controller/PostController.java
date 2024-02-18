@@ -42,7 +42,7 @@ public class PostController {
         return "redirect:/client";
     }
     @PutMapping("/{id}")
-    public String changePost(@PathVariable("id") long postId, String title, String text){
+    public String editPost(@PathVariable("id") long postId, String title, String text){
         if(text.equals("")){
             return "redirect:/client";
         }
@@ -86,6 +86,22 @@ public class PostController {
         postService.addComment(addCommentDto);
         return "redirect:/client";
     }
+    @PutMapping("/{postId}/comment/{commentId}")
+    public String editComment(@PathVariable("postId") long postId,
+                              @PathVariable("commentId") long commentId,
+                              String commentText,
+                              Principal principal)
+    {
+        //        User user;
+//        try{
+//            user = userService.findUserByEmail(principal.getName());
+////            if()
+//        }catch (WebClientException e){
+//            throw new RuntimeException(); // TODO Сделать защиту на удаление
+//        }
+        postService.editComment(commentId, commentText);
+        return "redirect:/client";
+    }
     @DeleteMapping("/{postId}/comment/{commentId}")
     public String deleteComment(@PathVariable("postId") long postId,
                                 @PathVariable("commentId") long commentId,
@@ -98,7 +114,7 @@ public class PostController {
 //        }catch (WebClientException e){
 //            throw new RuntimeException(); // TODO Сделать защиту на удаление
 //        }
-        postService.deleteComment(postId, commentId);
+        postService.deleteComment(commentId);
         return "redirect:/client";
     }
 }

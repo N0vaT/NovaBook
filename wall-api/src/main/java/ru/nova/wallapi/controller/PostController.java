@@ -77,10 +77,4 @@ public class PostController {
 
         return commentService.save(comment);
     }
-    @DeleteMapping("/{postId}/comment/{commentId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void  deleteComment(@PathVariable long postId,
-                               @PathVariable long commentId){
-        commentService.deleteById(commentId);
-    }
 }

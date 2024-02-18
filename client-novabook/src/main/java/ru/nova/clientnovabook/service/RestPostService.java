@@ -63,7 +63,13 @@ public class RestPostService implements PostService {
         return wallWebClient.addComment(comment.getPostId(), comment);
     }
     @Override
-    public void deleteComment(long postId, long commentId) {
-        wallWebClient.deleteComment(postId, commentId);
+    public void editComment(long commentId, String commentText) {
+        Comment comment = wallWebClient.getCommentById(commentId);
+        comment.setText(commentText);
+        wallWebClient.editComment(commentId, comment);
+    }
+    @Override
+    public void deleteComment(long commentId) {
+        wallWebClient.deleteComment(commentId);
     }
 }
