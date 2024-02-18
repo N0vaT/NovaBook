@@ -13,17 +13,18 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClientException;
 import ru.nova.clientnovabook.config.UserWebClient;
+import ru.nova.clientnovabook.config.WallWebClient;
 import ru.nova.clientnovabook.model.Mapper;
+import ru.nova.clientnovabook.model.Post;
 import ru.nova.clientnovabook.model.User;
+import ru.nova.clientnovabook.model.dto.PostDto;
 import ru.nova.clientnovabook.service.UserService;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/client")
@@ -32,6 +33,7 @@ import java.security.Principal;
 public class ClientController {
 
     private final UserService userService;
+    private final WallWebClient wallWebClient;
     private final Mapper mapper;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
@@ -46,6 +48,8 @@ public class ClientController {
         }catch (WebClientException e){
             user = userService.createNewUser(); //TODO
         }
+        model.addAttribute("posts", wallWebClient.getPostsByOwnerId(user.getUserId()));
+        model.addAttribute("postDto", new PostDto());
         model.addAttribute("user", mapper.toDto(user));
         return "clientPage";
     }
@@ -55,6 +59,28 @@ public class ClientController {
         model.addAttribute("user", mapper.toDto(userService.findUserById(id)));
         return "clientPage";
     }
+    @PostMapping("/post")
+    public String addPost(PostDto postDto, Principal principal){
+        User user;
+        try{
+            user = userService.findUserByEmail(principal.getName());
+        }catch (WebClientException e){
+            user = userService.createNewUser(); //TODO
+        }
+        Post post = new Post();
+        post.setPostText(postDto.getPostText());
+        post.setDateCreation(LocalDateTime.now());
+        post.setOwnerId(user.getUserId());
+        post.setStatus(Post.Status.ACTIVE);
+        System.out.println(post.toString());
+        wallWebClient.createPost(post);
+        return "clientPage";
+    }
+
+
+
+
+
     @GetMapping("/token")
     @ResponseBody
     public String token(Authentication authentication) {
@@ -73,4 +99,5 @@ public class ClientController {
         String idTokenValue = oidcIdToken.getTokenValue();
         return "<b>Id Token: </b>" + idTokenValue;
     }
+
 }

@@ -6,7 +6,7 @@
     <link rel="stylesheet"  th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
-<div th:if="${message} != null" th:insert="~{blocks/message :: message(${message})}"></div>
+<div th:if="${comment} != null" th:insert="~{blocks/comment :: comment(${comment})}"></div>
 <header th:insert="~{blocks/header}"></header>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editNameModal">Изменить ФИО</button>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPhoneModal">Изменить Телефон</button>
