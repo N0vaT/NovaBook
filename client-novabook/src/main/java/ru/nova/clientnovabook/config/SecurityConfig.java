@@ -23,7 +23,10 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(
-                        authorizeRequests -> authorizeRequests.antMatchers("/").permitAll().anyRequest().authenticated()
+                        authorizeRequests -> authorizeRequests
+                                .mvcMatchers("/", "/css/**","/js/**").permitAll()
+                                .mvcMatchers("/admin/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
                 )
                 .oauth2Login(
                         oauth2Login ->

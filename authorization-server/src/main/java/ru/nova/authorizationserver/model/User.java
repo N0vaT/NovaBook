@@ -15,7 +15,7 @@ import java.util.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "nb_users")
-public class User implements UserDetails {
+public class User {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,41 +27,10 @@ public class User implements UserDetails {
     private String username;
     @Column(name = "user_password")
     private String password;
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "nb_users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
+            joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
-    @Override
-    @Transient
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        getRoles().forEach(r -> authorities.add(new SimpleGrantedAuthority(r.getRoleName())));
-        return authorities;
-    }
-
-    @Override
-    @Transient
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    @Transient
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    @Transient
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    @Transient
-    public boolean isEnabled() {
-        return true;
-    }
 }

@@ -10,6 +10,8 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     cache: false
+    resources:
+      add-mappings: true
 
   security:
     oauth2:

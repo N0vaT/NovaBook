@@ -5,7 +5,6 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.RestTemplate;
-import ru.nova.clientnovabook.model.User;
 
 import java.io.IOException;
 
@@ -19,31 +18,6 @@ public class RestUserService implements UserService{
                     .getInterceptors()
                     .add(getBearerTokenInterceptor(accessToken));
         }
-    }
-
-    @Override
-    public Iterable<User> findAll() {
-        return null;
-    }
-
-    @Override
-    public User findById(Long userId) {
-        return null;
-    }
-
-    @Override
-    public void saveUser(User user) {
-
-    }
-
-    @Override
-    public User addUser(User user) {
-        return null;
-    }
-
-    @Override
-    public void deleteUser(Long userId) {
-
     }
 
     private ClientHttpRequestInterceptor
