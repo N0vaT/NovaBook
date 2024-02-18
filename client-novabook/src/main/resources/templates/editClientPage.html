@@ -22,14 +22,17 @@
                     <div class="mb-3">
                         <label for="edit-firstName" class="col-form-label">Имя:</label>
                         <input type="text" class="form-control" th:field="*{firstName}" id="edit-firstName">
+                        <p style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="edit-lastName" class="col-form-label">Фамилия:</label>
                         <input type="text" class="form-control" th:field="*{lastName}" id="edit-lastName">
+                        <p style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
                     </div>
                     <div class="mb-3">
                         <label for="edit-patronymic" class="col-form-label">Отчество:</label>
                         <input type="text" class="form-control" th:field="*{patronymic}" id="edit-patronymic">
+                        <p style="color:red" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}"></p>
                     </div>
                 </form>
             </div>
@@ -48,6 +51,7 @@
                     <div class="mb-3">
                         <label for="edit-phone" class="col-form-label">Телефон:</label>
                         <input type="text" class="form-control" th:field="*{phone}" id="edit-phone">
+                        <p style="color:red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
                     </div>
                 </form>
             </div>

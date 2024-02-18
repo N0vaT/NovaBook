@@ -1,10 +1,12 @@
 package ru.nova.clientnovabook.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
@@ -19,7 +21,9 @@ import ru.nova.clientnovabook.service.UserService;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 @Controller
 @RequestMapping("/client/edit")
@@ -35,26 +39,29 @@ public class ClientEditController {
         try{
             user = userService.findUserByEmail(principal.getName());
         }catch (WebClientException e){
-//            log.info("Create new client, email - {}", principal.getName());
-//            user = userService.createNewUser();
-            e.printStackTrace();
-            throw new RuntimeException(); //TODO
+            user = userService.createNewUser(); //TODO
         }
         if(!model.containsAttribute("message")){
             model.addAttribute("message", null);
         }
-        model.addAttribute("userName",
-                EditUserNameDto.builder()
-                        .firstName(user.getFirstName())
-                        .lastName(user.getLastName())
-                        .patronymic(user.getPatronymic())
-                .build());
-        model.addAttribute("userPhone", EditUserPhoneDto.builder()
-                        .phone(user.getPhone())
-                .build());
-        model.addAttribute("userBirthday", EditUserBirthdayDto.builder()
-                .birthday(user.getBirthday())
-                .build());
+        if(!model.containsAttribute("userName")){
+            model.addAttribute("userName",
+                    EditUserNameDto.builder()
+                            .firstName(user.getFirstName())
+                            .lastName(user.getLastName())
+                            .patronymic(user.getPatronymic())
+                            .build());
+        }
+        if(!model.containsAttribute("userPhone")){
+            model.addAttribute("userPhone", EditUserPhoneDto.builder()
+                    .phone(user.getPhone())
+                    .build());
+        }
+        if(!model.containsAttribute("userBirthday")) {
+            model.addAttribute("userBirthday", EditUserBirthdayDto.builder()
+                    .birthday(user.getBirthday())
+                    .build());
+        }
         model.addAttribute("listSex", User.Sex.values());
         model.addAttribute("userSex", EditUserSexDto.builder()
                         .sex(user.getSex())
@@ -66,7 +73,13 @@ public class ClientEditController {
     }
 
     @PutMapping("/name")
-    public String editName(EditUserNameDto userNameDto, Principal principal, RedirectAttributes redirectAttributes){
+    public String editName(@Valid EditUserNameDto userNameDto, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes){
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("userName", userNameDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userName", bindingResult);
+            redirectAttributes.addFlashAttribute("message", "Ошибка изменения ФИО");
+            return "redirect:/client/edit";
+        }
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
@@ -82,7 +95,13 @@ public class ClientEditController {
         return "redirect:/client/edit";
     }
     @PutMapping("/phone")
-    public String editPhone(EditUserPhoneDto userPhoneDto, Principal principal, RedirectAttributes redirectAttributes){
+    public String editPhone(@Valid EditUserPhoneDto userPhoneDto, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes){
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("userPhone", userPhoneDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userPhone", bindingResult);
+            redirectAttributes.addFlashAttribute("message", "Ошибка изменения номера телефона");
+            return "redirect:/client/edit";
+        }
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
@@ -97,17 +116,23 @@ public class ClientEditController {
     }
 
     @PutMapping("/birthday")
-    public String editBirthday(EditUserBirthdayDto userBirthdayDto, Principal principal, RedirectAttributes redirectAttributes){
+    public String editBirthday(EditUserBirthdayDto userBirthdayDto, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes){
+        if(userBirthdayDto.getBirthday().isAfter(LocalDate.now())){
+            redirectAttributes.addFlashAttribute("userPhone", userBirthdayDto);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userPhone", bindingResult);
+            redirectAttributes.addFlashAttribute("message", "Ошибка изменения дня рождения");
+            return "redirect:/client/edit";
+        }
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
+            user.setBirthday(userBirthdayDto.getBirthday());
+            userService.save(user);
+            redirectAttributes.addFlashAttribute("message", "День рождения успешно изменен на " + user.getBirthday().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         }catch (WebClientException e){
             e.printStackTrace();
             throw new RuntimeException(); //TODO
         }
-        user.setBirthday(userBirthdayDto.getBirthday());
-        userService.save(user);
-        redirectAttributes.addFlashAttribute("message", "День рождения успешно изменен на " + user.getBirthday().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         return "redirect:/client/edit";
     }
 

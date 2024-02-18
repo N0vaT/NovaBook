@@ -25,7 +25,6 @@ public class RegistrationController {
         if(!model.containsAttribute("registrationDto")){
             model.addAttribute("registrationDto", new RegistrationDto());
         }
-        System.out.println(0);
         return "registration";
     }
 
