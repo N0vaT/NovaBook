@@ -1,12 +1,14 @@
 package ru.nova.clientnovabook.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.nova.clientnovabook.model.Mapper;
 import ru.nova.clientnovabook.model.User;
 import ru.nova.clientnovabook.model.dto.*;
@@ -14,10 +16,11 @@ import ru.nova.clientnovabook.service.FileUploadService;
 import ru.nova.clientnovabook.service.UserService;
 
 import java.security.Principal;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/client/edit")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Log4j2
 public class ClientEditController {
     private final UserService userService;
@@ -33,6 +36,9 @@ public class ClientEditController {
 //            user = userService.createNewUser();
             e.printStackTrace();
             throw new RuntimeException(); //TODO
+        }
+        if(!model.containsAttribute("message")){
+            model.addAttribute("message", null);
         }
         model.addAttribute("userName",
                 EditUserNameDto.builder()
@@ -57,7 +63,7 @@ public class ClientEditController {
     }
 
     @PutMapping("/name")
-    public String editName(EditUserNameDto userNameDto, Principal principal){
+    public String editName(EditUserNameDto userNameDto, Principal principal, RedirectAttributes redirectAttributes){
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
@@ -68,12 +74,12 @@ public class ClientEditController {
         user.setFirstName(userNameDto.getFirstName());
         user.setLastName(userNameDto.getLastName());
         user.setPatronymic(userNameDto.getPatronymic());
-        log.info("User name changed - {}", userNameDto);
         userService.save(user);
+        redirectAttributes.addFlashAttribute("message", "Имя успешно изменено на " + userMapper.getFullName(user));
         return "redirect:/client/edit";
     }
     @PutMapping("/phone")
-    public String editPhone(EditUserPhoneDto userPhoneDto, Principal principal){
+    public String editPhone(EditUserPhoneDto userPhoneDto, Principal principal, RedirectAttributes redirectAttributes){
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
@@ -82,13 +88,13 @@ public class ClientEditController {
             throw new RuntimeException(); //TODO
         }
         user.setPhone(userPhoneDto.getPhone());
-        log.info("User phone changed - {}", userPhoneDto);
         userService.save(user);
+        redirectAttributes.addFlashAttribute("message", "Телефон успешно изменен на " +  user.getPhone());
         return "redirect:/client/edit";
     }
 
     @PutMapping("/birthday")
-    public String editBirthday(EditUserBirthdayDto userBirthdayDto, Principal principal){
+    public String editBirthday(EditUserBirthdayDto userBirthdayDto, Principal principal, RedirectAttributes redirectAttributes){
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
@@ -97,13 +103,13 @@ public class ClientEditController {
             throw new RuntimeException(); //TODO
         }
         user.setBirthday(userBirthdayDto.getBirthday());
-        log.info("User birthday changed - {}", userBirthdayDto);
         userService.save(user);
+        redirectAttributes.addFlashAttribute("message", "День рождения успешно изменен на " + user.getBirthday().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         return "redirect:/client/edit";
     }
 
     @PutMapping("/sex")
-    public String editSex(EditUserSexDto userSexDto, Principal principal){
+    public String editSex(EditUserSexDto userSexDto, Principal principal, RedirectAttributes redirectAttributes){
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
@@ -112,19 +118,18 @@ public class ClientEditController {
             throw new RuntimeException(); //TODO
         }
         user.setSex(userSexDto.getSex());
-        log.info("User sex changed - {}", userSexDto);
         userService.save(user);
-        log.info("User sex changed - {}", user);
+        redirectAttributes.addFlashAttribute("message", "Пол профиля успешно изменен на " + user.getSex().name());
         return "redirect:/client/edit";
     }
     @PutMapping("/avatar")
-    public String editAvatar(Principal principal, @RequestParam("file") MultipartFile file){
+    public String editAvatar(Principal principal, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes){
         User user;
         try{
             user = userService.findUserByEmail(principal.getName());
             fileUploadService.saveAvatar(file, user);
             userService.save(user);
-            log.info("User avatar changed - {}", user);
+            redirectAttributes.addFlashAttribute("message", "Аватар профиля успешно изменен");
         }catch (WebClientException e){
             e.printStackTrace();
             throw new RuntimeException(); //TODO

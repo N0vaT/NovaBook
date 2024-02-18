@@ -60,9 +60,6 @@ public class ClientController {
     @GetMapping("/token")
     @ResponseBody
     public String token(Authentication authentication) {
-
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
         OAuth2AuthorizedClient oAuth2AuthorizedClient = oAuth2AuthorizedClientService
                 .loadAuthorizedClient(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId(), oAuth2AuthenticationToken.getName());
