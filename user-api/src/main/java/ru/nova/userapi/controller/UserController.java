@@ -11,6 +11,7 @@ import ru.nova.userapi.service.UserService;
 import javax.websocket.server.PathParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Set;
 
 @RestController()
 @RequestMapping("/users")
@@ -42,6 +43,18 @@ public class UserController {
         try{
             User user = userService.findById(id);
             response = new ResponseEntity<>(user, HttpStatus.OK);
+        }catch (UserNotFoundException e){
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return response;
+    }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<Set<User>> getUserFriends(@PathVariable Long id){
+        ResponseEntity<Set<User>> response;
+        try{
+            User user = userService.findById(id);
+            response = new ResponseEntity<>(user.getFriends(), HttpStatus.OK);
         }catch (UserNotFoundException e){
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

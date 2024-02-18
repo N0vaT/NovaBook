@@ -3,11 +3,14 @@ package ru.nova.userapi.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
+import org.hibernate.annotations.WhereJoinTable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "nb_clients")
@@ -38,9 +41,16 @@ public class User {
     @Enumerated(value = EnumType.ORDINAL)
     @Column(name = "sex")
     private Sex sex;
-//    @ManyToMany
-//    private List<User> friends;
-
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "nb_clients_friends",
+            joinColumns = @JoinColumn (name = "user_from"),
+            inverseJoinColumns = @JoinColumn(name = "user_to")
+    )
+    private List<User> friends;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userFrom")
+    private List<FriendInvite> requestFriendInvites;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "userIo")
+    private List<FriendInvite> responseFriendInvites;
     public enum Sex{
         NONE, WOMAN, MAN
     }
