@@ -9,33 +9,40 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
-import org.springframework.security.oauth2.server.authorization.config.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import ru.nova.authorizationserver.config.properties.AuthorizationServerProperties;
 import ru.nova.authorizationserver.config.utils.JwkUtils;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
@@ -43,15 +50,32 @@ public class AuthorizationServerConfig {
     private final AuthorizationServerProperties authorizationServerProperties;
 
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Order(0)
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                        .oidc(withDefaults());
         http.exceptionHandling(
-                exception -> exception.authenticationEntryPoint(
-                        new LoginUrlAuthenticationEntryPoint("/login")
+                exception -> exception.defaultAuthenticationEntryPointFor(
+                        new LoginUrlAuthenticationEntryPoint("/login"),
+                        new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                 )
-        ).oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        ).oauth2ResourceServer((resourceServer) -> resourceServer
+                .jwt(withDefaults()));
+        return http.build();
+    }
+
+    @Bean
+    @Order(1)
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception{
+        http
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/css/**", "/favicon.ico", "/error", "/login", "/registration").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                );
         return http.build();
     }
 
@@ -100,11 +124,16 @@ public class AuthorizationServerConfig {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
+//    @Bean
+//    public ProviderSettings providerSettings(){
+//        return  ProviderSettings.builder()
+//                .issuer(authorizationServerProperties.getIssuerUrl())
+//                .build();
+//    }
+
     @Bean
-    public ProviderSettings providerSettings(){
-        return  ProviderSettings.builder()
-                .issuer(authorizationServerProperties.getIssuerUrl())
-                .build();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
