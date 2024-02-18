@@ -1,16 +1,16 @@
 package ru.nova.authorizationserver.model;
 
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Set;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -23,9 +23,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
-    @Column(name = "user_name")
-    private String username;
-    @Column(name = "user_password")
+    private String firstName;
+    private String lastName;
+    private String email;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "nb_users_roles",

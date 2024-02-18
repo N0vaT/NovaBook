@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: authorization-server
+  security:
+    oauth2:
+      authorizationserver:
+        issuer-url: http://127.0.0.1:9000
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/nb_users
