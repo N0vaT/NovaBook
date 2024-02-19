@@ -18,6 +18,7 @@ public class FriendCheckerService {
             return FriendStatus.FRIEND;
         }
         if(userPage.getResponseFriendInvites().stream()
+                .filter(fi -> fi.getStatus().equals(FriendInvite.InviteStatus.WAITING))
                 .map(FriendInvite::getUserFrom)
                 .anyMatch(id -> user.getUserId().equals(id))){
             return FriendStatus.WAITING;

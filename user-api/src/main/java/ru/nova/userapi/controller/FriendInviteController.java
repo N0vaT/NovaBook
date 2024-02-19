@@ -22,16 +22,21 @@ public class FriendInviteController {
 
     @GetMapping
     public ResponseEntity<List<FriendInviteDto>> getFriendInviteTo(@PathVariable long userId,
-                                                                   @RequestParam(required = false, defaultValue = "all") String idParameter)
+                                                                   @RequestParam(required = false, defaultValue = "all") String idParameter,
+                                                                   @RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                                                   @RequestParam(required = false, defaultValue = "25") int pageSize,
+                                                                   @RequestParam(required = false, defaultValue = "ASC") String direction,
+                                                                   @RequestParam(required = false, defaultValue = "dateTime") String sortByField)
     {
         List<FriendInvite> friends = new ArrayList<>();
         if(idParameter.equals("all")){
-            friends.addAll(friendInviteService.findAllByUserFromId(userId));
-            friends.addAll(friendInviteService.findAllByUserToId(userId));
+            // TODO Change to 1 request
+            friends.addAll(friendInviteService.findAllByUserFromId(userId, pageNumber, pageSize, direction, sortByField));
+            friends.addAll(friendInviteService.findAllByUserToId(userId, pageNumber, pageSize, direction, sortByField));
         }else if(idParameter.equals("from")){
-            friends = friendInviteService.findAllByUserFromId(userId);
+            friends = friendInviteService.findAllByUserFromId(userId, pageNumber, pageSize, direction, sortByField);
         }else if(idParameter.equals("to")){
-            friends = friendInviteService.findAllByUserToId(userId);
+            friends = friendInviteService.findAllByUserToId(userId, pageNumber, pageSize, direction, sortByField);
         }else{
             return ResponseEntity.badRequest().build();
         }

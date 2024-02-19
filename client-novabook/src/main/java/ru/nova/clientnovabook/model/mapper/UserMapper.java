@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.nova.clientnovabook.model.FriendInvite;
 import ru.nova.clientnovabook.model.User;
+import ru.nova.clientnovabook.model.dto.FriendInviteDto;
 import ru.nova.clientnovabook.model.dto.UserDto;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,11 +31,23 @@ public class UserMapper {
                         .map(friendMapper::toDto)
                         .toList())
                 .requestFriendInvites(user.getRequestFriendInvites().stream()
+                        .peek(rf -> {
+                            Long tmpId;
+                            if(rf.getUserTo().equals(user.getUserId())){
+                                tmpId = rf.getUserFrom();
+                                rf.setUserFrom(rf.getUserTo());
+                                rf.setUserTo(tmpId);
+                            }
+                        })
+                        .filter(rf -> !rf.getStatus().equals(FriendInvite.InviteStatus.DENIED))
                         .map(friendInviteMapper::toDto)
+                        .sorted(Comparator.comparing(FriendInviteDto::getDateTime).reversed())
                         .toList())
                 .responseFriendInvites(user.getResponseFriendInvites().stream()
-                        .filter(r -> !r.getStatus().equals(FriendInvite.InviteStatus.DENIED))
+                        .filter(rf -> !rf.getUserFrom().equals(user.getUserId()))
+                        .filter(rf -> rf.getStatus().equals(FriendInvite.InviteStatus.WAITING))
                         .map(friendInviteMapper::toDto)
+                        .sorted(Comparator.comparing(FriendInviteDto::getDateTime).reversed())
                         .toList())
                 .build();
     }
