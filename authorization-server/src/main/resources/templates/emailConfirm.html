@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>NovaBook</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="login-page">
+    <div class="form">
+        <h2>Подтвердите почту</h2>
+        <h3>Введите код в письме</h3>
+        <form  class="login-form" th:action="@{/registration/confirm}" method="post">
+            <div>
+                <input type="text" name="username" placeholder="Введите код" required autofocus />
+            </div>
+            <input class="button" type="submit" value="Подтвердить" />
+        </form>
+        <a th:href="@{/registration/confirm}">Отправить еще код</a>
+        <a th:href="@{/login}">Войти</a>
+    </div>
+</div>
+<!--<script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
+</body>
+</html>

@@ -6,10 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.nova.authorizationserver.model.dto.RegistrationDto;
 import ru.nova.authorizationserver.services.UserService;
@@ -17,6 +15,7 @@ import ru.nova.authorizationserver.services.UserService;
 @Controller
 @RequestMapping("/registration")
 @RequiredArgsConstructor
+@SessionAttributes("registrationDto")
 public class RegistrationController {
     private final UserService userService;
 
@@ -30,14 +29,27 @@ public class RegistrationController {
 
     @PostMapping
     public String registerNewUser(@Valid RegistrationDto registrationDto, BindingResult bindingResult, RedirectAttributes redirectAttrs){
-        if(bindingResult.hasErrors()
-                || !registrationDto.getPassword().equals(registrationDto.getRepeatPassword())
-                || !userService.saveUser(registrationDto)){
+        if(bindingResult.hasErrors() || !registrationDto.getPassword().equals(registrationDto.getRepeatPassword())){
             redirectAttrs.getFlashAttributes().clear();
             redirectAttrs.addFlashAttribute("registrationDto", registrationDto);
             redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.registrationDto", bindingResult);
             return "redirect:/registration";
         }
+        return "redirect:/registration/confirm";
+    }
+
+    @GetMapping("/confirm")
+    public String emailConfirm(RegistrationDto registrationDto){
+        System.out.println(registrationDto);
+
+        return "emailConfirm";
+//        sessionStatus.setComplete();
+
+    }
+    @PostMapping("/confirm")
+    public String emailCodeConfirm(RegistrationDto registrationDto, SessionStatus sessionStatus){
+        System.out.println(registrationDto);
+        sessionStatus.setComplete();
         return "redirect:/login";
     }
 }
