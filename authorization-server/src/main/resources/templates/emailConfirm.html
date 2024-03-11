@@ -13,7 +13,7 @@
         <h3>Введите код в письме</h3>
         <form  class="login-form" th:action="@{/registration/confirm}" method="post">
             <div>
-                <input type="text" name="username" placeholder="Введите код" required autofocus />
+                <input type="text" name="code" placeholder="Введите код" required autofocus />
             </div>
             <input class="button" type="submit" value="Подтвердить" />
         </form>

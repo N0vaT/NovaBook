@@ -2,6 +2,7 @@ package ru.nova.authorizationserver.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,15 +10,24 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.nova.authorizationserver.config.utils.EmailCodeGenerator;
+import ru.nova.authorizationserver.model.StringValue;
 import ru.nova.authorizationserver.model.dto.RegistrationDto;
 import ru.nova.authorizationserver.services.UserService;
+import ru.nova.authorizationserver.services.kafka.DataSender;
 
+import java.time.LocalDateTime;
+
+@Log4j2
 @Controller
 @RequestMapping("/registration")
 @RequiredArgsConstructor
 @SessionAttributes("registrationDto")
 public class RegistrationController {
     private final UserService userService;
+    private final DataSender dataSender;
+    private String emailCode;
+    private LocalDateTime dateCode;
 
     @GetMapping
     public String getPageRegistration(Model model){
@@ -40,15 +50,20 @@ public class RegistrationController {
 
     @GetMapping("/confirm")
     public String emailConfirm(RegistrationDto registrationDto){
-        System.out.println(registrationDto);
-
+        emailCode = EmailCodeGenerator.generateCode();
+        dateCode = LocalDateTime.now();
+        dataSender.send(new StringValue(registrationDto.getEmail(), emailCode, dateCode));
         return "emailConfirm";
-//        sessionStatus.setComplete();
 
     }
     @PostMapping("/confirm")
-    public String emailCodeConfirm(RegistrationDto registrationDto, SessionStatus sessionStatus){
-        System.out.println(registrationDto);
+    public String emailCodeConfirm(RegistrationDto registrationDto, SessionStatus sessionStatus, String code){
+        LocalDateTime endDateCode = dateCode.plusMinutes(3L);
+        if(dateCode.isAfter(endDateCode) || !emailCode.equals(code)){
+            log.error("Code confirmation failure ({}-{})", emailCode, code);
+            return "redirect:/registration/confirm";
+        }
+        userService.saveUser(registrationDto);
         sessionStatus.setComplete();
         return "redirect:/login";
     }

@@ -1,6 +1,10 @@
 server:
   port: 9000
 
+application:
+  kafka:
+    topic: "auth-mail-topic"
+
 spring:
   application:
     name: authorization-server
@@ -22,3 +26,15 @@ spring:
       hibernate:
         dialect:  org.hibernate.dialect.PostgreSQLDialect
         show_sql: true
+  kafka:
+    producer:
+      #    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      #    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      bootstrap-servers: localhost:9092
+      client-id: auth-mail-producer
+  #    properties:
+  #      spring:
+  #        json:
+  #          add:
+  #            type:
+  #              headers: false
