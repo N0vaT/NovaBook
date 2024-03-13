@@ -1,0 +1,28 @@
+server:
+  port: 8092
+
+application:
+  kafka:
+    topic: auth-mail-topic
+  email:
+    from: myEmail@yandex.ru
+
+spring:
+  mail:
+    protocol: smtps
+    host: smtp.yandex.ru
+    port: 465
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  kafka:
+    consumer:
+      group-id: mail-service
+      bootstrap-servers: localhost:9092
+      client-id: mail-service-consumer
+      auto-offset-reset: earliest

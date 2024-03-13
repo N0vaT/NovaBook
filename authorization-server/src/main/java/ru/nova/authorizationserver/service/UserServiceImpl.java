@@ -1,4 +1,4 @@
-package ru.nova.authorizationserver.services;
+package ru.nova.authorizationserver.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -3,7 +3,7 @@ server:
 
 application:
   kafka:
-    topic: "auth-mail-topic"
+    topic: auth-mail-topic
 
 spring:
   application:
@@ -28,13 +28,5 @@ spring:
         show_sql: true
   kafka:
     producer:
-      #    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      #    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       bootstrap-servers: localhost:9092
       client-id: auth-mail-producer
-  #    properties:
-  #      spring:
-  #        json:
-  #          add:
-  #            type:
-  #              headers: false

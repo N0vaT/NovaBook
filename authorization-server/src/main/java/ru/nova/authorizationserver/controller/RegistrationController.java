@@ -6,15 +6,14 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.nova.authorizationserver.config.utils.EmailCodeGenerator;
 import ru.nova.authorizationserver.model.StringValue;
 import ru.nova.authorizationserver.model.dto.RegistrationDto;
-import ru.nova.authorizationserver.services.UserService;
-import ru.nova.authorizationserver.services.kafka.DataSender;
+import ru.nova.authorizationserver.service.UserService;
+import ru.nova.authorizationserver.service.kafka.MailConfirmSender;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +24,7 @@ import java.time.LocalDateTime;
 @SessionAttributes("registrationDto")
 public class RegistrationController {
     private final UserService userService;
-    private final DataSender dataSender;
+    private final MailConfirmSender mailConfirmSender;
     private String emailCode;
     private LocalDateTime dateCode;
 
@@ -52,7 +51,7 @@ public class RegistrationController {
     public String emailConfirm(RegistrationDto registrationDto){
         emailCode = EmailCodeGenerator.generateCode();
         dateCode = LocalDateTime.now();
-        dataSender.send(new StringValue(registrationDto.getEmail(), emailCode, dateCode));
+        mailConfirmSender.send(new StringValue(registrationDto.getEmail(), emailCode, dateCode));
         return "emailConfirm";
 
     }

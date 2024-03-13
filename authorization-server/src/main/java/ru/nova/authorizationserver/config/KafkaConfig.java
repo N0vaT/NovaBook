@@ -17,7 +17,6 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.nova.authorizationserver.config.properties.ApplicationKafkaProperties;
 import ru.nova.authorizationserver.model.StringValue;
 
-@Log4j2
 @Configuration
 @RequiredArgsConstructor
 public class KafkaConfig {

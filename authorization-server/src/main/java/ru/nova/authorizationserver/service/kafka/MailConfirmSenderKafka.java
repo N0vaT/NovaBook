@@ -1,17 +1,14 @@
-package ru.nova.authorizationserver.services.kafka;
+package ru.nova.authorizationserver.service.kafka;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ru.nova.authorizationserver.model.StringValue;
 
 import java.util.function.Consumer;
 
 @Log4j2
-public class DataSenderKafka implements DataSender {
+public class MailConfirmSenderKafka implements MailConfirmSender {
 
     private final KafkaTemplate<String, StringValue> template;
 
@@ -19,7 +16,7 @@ public class DataSenderKafka implements DataSender {
 
     private final String topic;
 
-    public DataSenderKafka(
+    public MailConfirmSenderKafka(
             String topic,
             KafkaTemplate<String, StringValue> template,
             Consumer<StringValue> sendAsk) {
