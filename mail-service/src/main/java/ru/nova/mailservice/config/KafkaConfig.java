@@ -32,7 +32,7 @@ public class KafkaConfig {
         var props = kafkaProperties.buildConsumerProperties();
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(TYPE_MAPPINGS, "ru.nova.mailservice.model.KafkaMailMessage:ru.nova.mailservice.model.KafkaMailMessage");
+        props.put(TYPE_MAPPINGS, "ru.nova.authorizationserver.model.KafkaMailMessage:ru.nova.mailservice.model.KafkaMailMessage, ru.nova.authorizationserver.model.StringValue:ru.nova.mailservice.model.KafkaMailMessage");
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 3);
         props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 3_000);
 

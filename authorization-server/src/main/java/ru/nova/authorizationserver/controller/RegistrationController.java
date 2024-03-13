@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.nova.authorizationserver.config.utils.EmailCodeGenerator;
-import ru.nova.authorizationserver.model.StringValue;
+import ru.nova.authorizationserver.model.KafkaMailMessage;
 import ru.nova.authorizationserver.model.dto.RegistrationDto;
 import ru.nova.authorizationserver.services.UserService;
 import ru.nova.authorizationserver.services.kafka.MailConfirmSender;
@@ -51,7 +51,7 @@ public class RegistrationController {
     public String emailConfirm(RegistrationDto registrationDto){
         emailCode = EmailCodeGenerator.generateCode();
         dateCode = LocalDateTime.now();
-        mailConfirmSender.send(new StringValue(registrationDto.getEmail(), emailCode, dateCode));
+        mailConfirmSender.send(new KafkaMailMessage(registrationDto.getEmail(), emailCode, dateCode));
         return "emailConfirm";
 
     }

@@ -5,15 +5,15 @@ application:
   kafka:
     topic: auth-mail-topic
   email:
-    from: myEmail@yandex.ru
+    from: AnatoliyNosov03@yandex.ru
 
 spring:
   mail:
     protocol: smtps
     host: smtp.yandex.ru
     port: 465
-    username: ${SMTP_USERNAME}
-    password: ${SMTP_PASSWORD}
+    username: mail@yandex.ru
+    password: password
     properties:
       mail:
         smtp:
@@ -25,4 +25,4 @@ spring:
       group-id: mail-service
       bootstrap-servers: localhost:9092
       client-id: mail-service-consumer
-      auto-offset-reset: earliest
+#      auto-offset-reset: earliest
