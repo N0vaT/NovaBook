@@ -32,7 +32,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import ru.nova.authorizationserver.config.properties.AuthorizationServerProperties;
 import ru.nova.authorizationserver.config.utils.JwkUtils;
-import ru.nova.authorizationserver.service.UserService;
+import ru.nova.authorizationserver.services.UserService;
 
 import java.util.Collection;
 import java.util.UUID;

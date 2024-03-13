@@ -1,4 +1,4 @@
-package ru.nova.authorizationserver.service;
+package ru.nova.authorizationserver.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

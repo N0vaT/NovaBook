@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.JacksonUtils;
 import ru.nova.authorizationserver.model.StringValue;
-import ru.nova.authorizationserver.service.kafka.MailConfirmSender;
-import ru.nova.authorizationserver.service.kafka.MailConfirmSenderKafka;
+import ru.nova.authorizationserver.services.kafka.MailConfirmSender;
+import ru.nova.authorizationserver.services.kafka.MailConfirmSenderKafka;
 
 @Configuration
 @Log4j2

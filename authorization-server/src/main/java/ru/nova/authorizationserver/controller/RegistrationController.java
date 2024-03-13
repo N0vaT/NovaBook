@@ -12,8 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.nova.authorizationserver.config.utils.EmailCodeGenerator;
 import ru.nova.authorizationserver.model.StringValue;
 import ru.nova.authorizationserver.model.dto.RegistrationDto;
-import ru.nova.authorizationserver.service.UserService;
-import ru.nova.authorizationserver.service.kafka.MailConfirmSender;
+import ru.nova.authorizationserver.services.UserService;
+import ru.nova.authorizationserver.services.kafka.MailConfirmSender;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package ru.nova.authorizationserver.service.kafka;
+package ru.nova.authorizationserver.services.kafka;
 
 import ru.nova.authorizationserver.model.StringValue;
 

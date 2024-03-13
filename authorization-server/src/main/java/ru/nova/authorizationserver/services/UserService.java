@@ -1,4 +1,4 @@
-package ru.nova.authorizationserver.service;
+package ru.nova.authorizationserver.services;
 
 import ru.nova.authorizationserver.model.dto.RegistrationDto;
 
