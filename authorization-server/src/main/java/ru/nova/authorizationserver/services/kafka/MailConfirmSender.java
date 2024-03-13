@@ -1,7 +1,7 @@
 package ru.nova.authorizationserver.services.kafka;
 
-import ru.nova.authorizationserver.model.StringValue;
+import ru.nova.authorizationserver.model.KafkaMailMessage;
 
 public interface MailConfirmSender {
-    void send(StringValue value);
+    void send(KafkaMailMessage value);
 }

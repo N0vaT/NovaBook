@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.JacksonUtils;
-import ru.nova.authorizationserver.model.StringValue;
+import ru.nova.authorizationserver.model.KafkaMailMessage;
 import ru.nova.authorizationserver.services.kafka.MailConfirmSender;
 import ru.nova.authorizationserver.services.kafka.MailConfirmSenderKafka;
 
@@ -20,7 +20,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public MailConfirmSender dataSender(NewTopic topic, KafkaTemplate<String, StringValue> kafkaTemplate) {
+    public MailConfirmSender dataSender(NewTopic topic, KafkaTemplate<String, KafkaMailMessage> kafkaTemplate) {
         return new MailConfirmSenderKafka(
                 topic.name(),
                 kafkaTemplate,

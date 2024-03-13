@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS nb_users(
     user_id serial,
     first_name varchar(20),
     last_name varchar(20),
-    email varchar(20) UNIQUE NOT NULL,
+    email varchar(100) UNIQUE NOT NULL,
     password varchar(100) NOT NULL,
     PRIMARY KEY (user_id)
     );

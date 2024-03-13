@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MailConfirmListener {
     private final MailService mailService;
-    private final ApplicationProperties applicationProperties;
 
     @KafkaListener(
             topics = "${application.kafka.topic}",
