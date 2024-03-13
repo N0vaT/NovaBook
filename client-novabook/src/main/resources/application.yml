@@ -43,5 +43,5 @@ spring:
 # end::provider_config[]
 upload:
   avatarFile:
-    path: /Users/margetem/NovaBook/client-novabook/src/main/resources/static/images/
-#    path: D:\Project\NovaBook\client-novabook\src\main\resources\static\images\
+#    path: /Users/margetem/NovaBook/client-novabook/src/main/resources/static/images/
+    path: D:\Project\NovaBook\client-novabook\src\main\resources\static\images\
