@@ -1,6 +1,8 @@
 package ru.nova.userapi.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.nova.userapi.exception.FriendInviteNotFoundException;
 import ru.nova.userapi.model.FriendInvite;
@@ -21,13 +23,19 @@ public class JpaFriendInviteService implements FriendInviteService{
     private final UserRepository userRepository;
 
     @Override
-    public List<FriendInvite> findAllByUserToId(long userId) {
-        return friendInviteRepository.findAllByUserToUserId(userId);
+    public List<FriendInvite> findAllByUserToId(long userId, int pageNumber, int pageSize, String direction, String sortByField) {
+        Sort.Direction sortDirection = direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(sortDirection, sortByField);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        return friendInviteRepository.findAllByUserToUserId(userId, pageRequest);
     }
 
     @Override
-    public List<FriendInvite> findAllByUserFromId(long userId) {
-        return friendInviteRepository.findAllByUserFromUserId(userId);
+    public List<FriendInvite> findAllByUserFromId(long userId, int pageNumber, int pageSize, String direction, String sortByField) {
+        Sort.Direction sortDirection = direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(sortDirection, sortByField);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+        return friendInviteRepository.findAllByUserFromUserId(userId, pageRequest);
     }
 
     @Override
@@ -59,6 +67,7 @@ public class JpaFriendInviteService implements FriendInviteService{
             userRepository.save(userTo);
             userRepository.save(userFrom);
         }
+        // DENIED + friend
         if(inviteDto.getStatus().equals(FriendInvite.InviteStatus.DENIED)
                 && userFrom.getFriends().stream().anyMatch(u -> u.equals(userTo))
         ){
@@ -76,6 +85,18 @@ public class JpaFriendInviteService implements FriendInviteService{
             long id = userFrom.getRequestFriendInvites().stream()
                     .filter(r -> r.getUserTo().equals(userTo)).findAny().get().getInviteId();
             inviteDto.setInviteId(id);
+        }
+        // DENIED + NOT friend
+        if(inviteDto.getStatus().equals(FriendInvite.InviteStatus.DENIED)
+                && userFrom.getFriends().stream().noneMatch(u -> u.equals(userTo))
+        ){
+            FriendInvite inviteDeniedTo = userTo.getRequestFriendInvites().stream()
+                    .filter(r -> r.getUserTo().equals(userFrom))
+                    .findAny()
+                    .get();
+            userTo.getRequestFriendInvites().remove(inviteDeniedTo);
+            userRepository.save(userTo);
+            return null;
         }
         FriendInvite invite = FriendInvite.builder()
                 .inviteId(inviteDto.getInviteId())

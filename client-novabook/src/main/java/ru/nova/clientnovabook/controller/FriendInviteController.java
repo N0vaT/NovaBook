@@ -34,7 +34,7 @@ public class FriendInviteController {
         friendInviteService.sendFriendRequest(user, id);
         return "redirect:/client/" + id;
     }
-    @DeleteMapping
+    @DeleteMapping()
     public String declineFriendRequest(@PathVariable long id,
                                     Principal principal){
         User user;
